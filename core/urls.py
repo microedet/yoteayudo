@@ -7,6 +7,6 @@ urlpatterns = [
     path("blog/",views.blog,name='blog'),
     path("contact_us/",views.contact_us,name="contact_us"),
     path("gallery/",views.gallery,name="gallery"),
-    path("services/",views.services,name="blog"),
+    path("services/",views.services,name="services"),
 
 ]

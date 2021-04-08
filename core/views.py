@@ -16,3 +16,6 @@ def gallery(request):
 def services(request):
     return render(request,"core/services.html")
 
+def blog(request):
+    return render(request,"core/blog.html")
+

@@ -1,0 +1,35 @@
+==> 2021-04-08 08:14:32 <==
+# cmd: /home/vpasbar/miniconda3/bin/conda create -p /home/vpasbar/miniconda3/envs/yoteayudo -y python=3.9
+# conda version: 4.9.2
++defaults/linux-64::_libgcc_mutex-0.1-main
++defaults/linux-64::ca-certificates-2021.1.19-h06a4308_1
++defaults/linux-64::certifi-2020.12.5-py39h06a4308_0
++defaults/linux-64::ld_impl_linux-64-2.33.1-h53a641e_7
++defaults/linux-64::libffi-3.3-he6710b0_2
++defaults/linux-64::libgcc-ng-9.1.0-hdf63c60_0
++defaults/linux-64::libstdcxx-ng-9.1.0-hdf63c60_0
++defaults/linux-64::ncurses-6.2-he6710b0_1
++defaults/linux-64::openssl-1.1.1k-h27cfd23_0
++defaults/linux-64::pip-21.0.1-py39h06a4308_0
++defaults/linux-64::python-3.9.2-hdb3f193_0
++defaults/linux-64::readline-8.1-h27cfd23_0
++defaults/linux-64::setuptools-52.0.0-py39h06a4308_0
++defaults/linux-64::sqlite-3.35.4-hdfb4753_0
++defaults/linux-64::tk-8.6.10-hbc83047_0
++defaults/linux-64::xz-5.2.5-h7b6447c_0
++defaults/linux-64::zlib-1.2.11-h7b6447c_3
++defaults/noarch::tzdata-2020f-h52ac0ba_0
++defaults/noarch::wheel-0.36.2-pyhd3eb1b0_0
+# update specs: ['python=3.9']
+==> 2021-04-08 08:14:40 <==
+# cmd: /home/vpasbar/miniconda3/bin/conda install -p /home/vpasbar/miniconda3/envs/yoteayudo django -y
+# conda version: 4.9.2
++defaults/linux-64::krb5-1.17.1-h173b8e3_0
++defaults/linux-64::libedit-3.1.20210216-h27cfd23_1
++defaults/linux-64::libpq-12.2-h20c2e04_0
++defaults/linux-64::psycopg2-2.8.6-py39h3c74f83_1
++defaults/noarch::asgiref-3.3.4-pyhd3eb1b0_0
++defaults/noarch::django-3.2-pyhd3eb1b0_0
++defaults/noarch::pytz-2021.1-pyhd3eb1b0_0
++defaults/noarch::sqlparse-0.4.1-py_0
+# update specs: ['django']

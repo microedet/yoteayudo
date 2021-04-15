@@ -1,0 +1,11 @@
+prefix=/home/vpasbar/miniconda3/envs/yoteayudo
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+toolexeclibdir=${libdir}
+includedir=/home/vpasbar/miniconda3/envs/yoteayudo/include
+
+Name: libffi
+Description: Library supporting Foreign Function Interfaces
+Version: 3.3
+Libs: -L${toolexeclibdir} -lffi
+Cflags: -I${includedir}

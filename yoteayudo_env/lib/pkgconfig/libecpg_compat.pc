@@ -1,0 +1,9 @@
+Name: libecpg_compat
+Description: PostgreSQL libecpg_compat library
+Url: http://www.postgresql.org/
+Version: 12.2
+Requires: 
+Requires.private: libecpg libpgtypes
+Cflags: -I/home/vpasbar/miniconda3/envs/yoteayudo/include
+Libs: -L/home/vpasbar/miniconda3/envs/yoteayudo/lib -lecpg_compat
+Libs.private: -L/home/vpasbar/miniconda3/envs/yoteayudo/lib -lm

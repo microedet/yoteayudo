@@ -3,6 +3,7 @@ from django.db import models
 # Create your models here.
 
 class Cliente (models.Model):
+    actions_on_bottom=True
     id=models.AutoField(verbose_name="idCLiente",primary_key=True)
     dni=models.CharField(max_length=10)
     nombre = models.CharField(max_length=30)
@@ -21,7 +22,7 @@ class Cliente (models.Model):
         return self.dni + " " + self.nombre + " " + self.apellido
 
 class Usuario(models.Model):
-    idUsuario=models.OneToOneField(Cliente,on_delete=models.CASCADE,related_name="Usuario")
+    idUsuario=models.OneToOneField(Cliente,on_delete=models.CASCADE,related_name="UsuarioidUsuario")
     username = models.CharField(max_length=30)
     password = models.IntegerField
 
@@ -31,7 +32,7 @@ class Usuario(models.Model):
         ordering = ['id']
 
     def __str__(self):
-        return self.id + " " + self.username + " " + self.password
+        return (self.id).ToString() + " " + self.username + " " + (self.password).ToString()
 
 class Especialista(models.Model):
     id = models.AutoField(verbose_name="idEspecialista", primary_key=True)
@@ -42,7 +43,7 @@ class Especialista(models.Model):
     fechaNacimiento = models.DateField(verbose_name="Fecha de Nacimiento")
     foto = models.ImageField(upload_to='core', verbose_name="Foto")
     biografia= models.CharField(max_length=255,verbose_name="biografia")
-    idUsuario = models.ForeignKey(Usuario,on_delete=models.CASCADE,related_name="Especialista")
+    idUsuario = models.ForeignKey(Usuario,on_delete=models.CASCADE,related_name="EspecialistaidUsuario")
 
 
     class Meta:
@@ -57,10 +58,10 @@ class Especialista(models.Model):
 class Cita(models.Model):
     id = models.AutoField(verbose_name="idCita",primary_key=True)
     fechaAlta = models.DateTimeField(verbose_name="Fecha de Alta",auto_now_add=True)
-    idCliente= models.ForeignKey(Cliente,on_delete=models.CASCADE,related_name="Cita_idCliente")
-    idEspecialista= models.ForeignKey(Especialista,on_delete=models.CASCADE,related_name="Cita_idCliente")
-    informe= models.TextField(verbose_name="texto Informe")
-    realizada= models.BooleanField(verbose_name="cita realizada", default=False)
+    idCliente= models.ForeignKey(Cliente,on_delete=models.CASCADE,related_name="CitaidCliente")
+    idEspecialista= models.ForeignKey(Especialista,on_delete=models.CASCADE,related_name="CitaidEspecialista")
+    informe= models.TextField(verbose_name="Cita Texto Informe")
+    realizada= models.BooleanField(verbose_name="Cita realizada", default=False)
 
 
     class Meta:
@@ -77,8 +78,8 @@ class Cita(models.Model):
 
 class Mensaje(models.Model):
     id = models.AutoField(verbose_name="idMensaje",primary_key=True)
-    idEmisor=models.ForeignKey(Usuario,on_delete=models.CASCADE,related_name="Mensaje_id_Emisor")
-    idReceptor=models.ForeignKey(Usuario,on_delete=models.CASCADE,related_name="Mensaje_id_Receptor")
+    idEmisor=models.ForeignKey(Usuario,on_delete=models.CASCADE,related_name="MensajeidEmisor")
+    idReceptor=models.ForeignKey(Usuario,on_delete=models.CASCADE,related_name="MensajeidReceptor")
     fecha = models.DateTimeField(verbose_name="Fecha de Mensaje", auto_now=True)
     asunto = models.CharField(verbose_name="asunto Mensaje",max_length=50)
     texto= models.TextField(verbose_name="texto Mensaje")

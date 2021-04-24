@@ -19,3 +19,5 @@ def services(request):
 def blog(request):
     return render(request,"core/blog.html")
 
+def login(request):
+    return render(request,"accounts/login.html")

@@ -21,6 +21,9 @@ from django.conf import settings
 urlpatterns = [
     path('',include('core.urls')),
     path('admin/',admin.site.urls),
+
+    #path auth
+    path('accounts/',include('django.contrib.auth.urls')),
 ]
 if settings.DEBUG:
     from django.conf.urls.static import static

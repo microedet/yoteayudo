@@ -42,7 +42,12 @@
                    </div>
                    <div class="col-sm-2 d-none d-lg-block">
                        <!--<button class="btn btn-success">Reservar ahora</button>-->
+                       {% if not request.user.is_authenticated %}
                        <button class="btn btn-success"><a href="{% url 'login' %}">Login</a></button>
+                       {% else %}
+                       <button class="btn btn-success"><a href="{% url 'logout' %}">Logout</a></button>
+
+                       {% endif %}
                    </div>
                 </div>
             </div>

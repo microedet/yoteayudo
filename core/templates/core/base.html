@@ -40,12 +40,16 @@
 
                         </ul>
                    </div>
-                   <div class="col-sm-2 d-none d-lg-block">
+                   <!--<div class="col-sm-2 d-none d-lg-block">-->
+                        <div class="col-sm-2 d-none d-lg-block no-padding">
                        <!--<button class="btn btn-success">Reservar ahora</button>-->
                        {% if not request.user.is_authenticated %}
-                       <button class="btn btn-success"><a href="{% url 'login' %}">Login</a></button>
+
+                           <button class="btn btn-succes"><a href="{% url 'login' %}">Acceder</a></button>
+                           <button class="btn btn-succes"><a href="{% url 'signup' %}">Registrarse</a></button>
+
                        {% else %}
-                       <button class="btn btn-success"><a href="{% url 'logout' %}">Logout</a></button>
+                       <button class="btn btn-success"><a href="{% url 'logout' %}">Cerrar Sesión</a></button>
 
                        {% endif %}
                    </div>

@@ -20,8 +20,8 @@ from django.conf import settings
 from jet_django.urls import jet_urls
 
 urlpatterns = [
-    path('jet_api/', include(jet_urls)),
     path('',include('core.urls')),
+    path('jet/', include('jet.urls', 'jet')),  # Django JET URLS
     path('admin/',admin.site.urls),
 
     #path auth

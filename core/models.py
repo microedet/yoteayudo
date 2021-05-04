@@ -14,7 +14,7 @@ class Cliente (models.Model):
     nombre = models.CharField(max_length=30)
     apellido = models.CharField(max_length=50)
     direccion = models.CharField(max_length=100)
-    fechaNacimiento = models.DateField(verbose_name="Fecha de Nacimiento")
+    fechaNacimiento = models.DateField(null=True,verbose_name="Fecha de Nacimiento")
     foto = models.ImageField(upload_to='core', verbose_name="Foto")
     idUsuario= models.OneToOneField(Usuario,on_delete=models.CASCADE,primary_key=True,related_name="ClienteidUsuario")
 
@@ -33,7 +33,7 @@ class Especialista(models.Model):
     nombre = models.CharField(max_length=50)
     apellido = models.CharField(max_length=100)
     direccion = models.CharField(max_length=100)
-    fechaNacimiento = models.DateField(verbose_name="Fecha de Nacimiento")
+    fechaNacimiento = models.DateField(verbose_name="Fecha de Nacimiento",null=True)
     foto = models.ImageField(upload_to='core', verbose_name="Foto")
     biografia= models.CharField(max_length=255,verbose_name="biografia")
     idUsuario = models.OneToOneField(Usuario,on_delete=models.CASCADE,primary_key=True,related_name="EspecialistaidUsuario")

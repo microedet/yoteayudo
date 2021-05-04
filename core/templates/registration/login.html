@@ -16,6 +16,7 @@
           {% if 'register' in request.GET %}
                    <p style="color:green">Usuario registrado correctamente ya puedes identificarte</p>
           {% endif %}
+
           {% if form.non_field_errors %}
             <p style="color:red">Usuario o contraseña incorrectos, prueba de nuevo.</p>
           {% endif %}

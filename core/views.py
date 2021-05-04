@@ -1,13 +1,16 @@
 from django.shortcuts import render
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, TemplateView, UpdateView
+from core.forms import ClienteSignupForm, EspecialistaSignupForm, ClienteUpdateForm, EspecialistaUpdateForm
+from django import forms
+from core.models import Cliente, Especialista
+
+#decoradores
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+
 
 # Create your views here.
-from django.urls import reverse_lazy
-from django.views.generic import CreateView, TemplateView
-
-from core.forms import ClienteSignupForm, EspecialistaSignupForm
-#from registration.views import SigUpView
-from django import forms
-
 
 
 def index(request):
@@ -72,5 +75,32 @@ class EspecialistaSignUpView(CreateView):
         return form
 
 
+#da la opcion de elegir el tipo de cuenta
 class SignUpView(TemplateView):
     template_name = 'registration/signup.html'
+
+#vista para el formulario del perfil de cliente
+@method_decorator(login_required, name='dispatch')
+class ClienteUpdate(UpdateView):
+    form_class = ClienteUpdateForm
+    success_url = reverse_lazy('index')
+    template_name = 'cliente/update_cliente.html'
+
+    def get_object(self):
+        #recuperamos el objeto que vamos a editar
+
+        cliente , created = Cliente.objects.get_or_create(idUsuario=self.request.user)
+        return cliente
+
+#vista para el formulario del perfil de especialista
+@method_decorator(login_required, name='dispatch')
+class EspecialistaUpdate(UpdateView):
+    form_class = EspecialistaUpdateForm
+    success_url = reverse_lazy('index')
+    template_name = 'especialista/update_especialista.html'
+
+    def get_object(self):
+        #recuperamos el objeto que vamos a editar
+
+        especialista , created = Especialista.objects.get_or_create(idUsuario=self.request.user)
+        return especialista

@@ -14,11 +14,16 @@ urlpatterns = [
     path("services/",views.services,name="services"),
     path("login/",views.login,name="login"),
 
-    #ampliacion
+    #urls para hacer los registros
     path('accounts/', include('django.contrib.auth.urls')),
-    #path('accounts/', include('registration.urls')),
     path('accounts/signup/', views.SignUpView.as_view(), name='signup'),
     path('accounts/signup/cliente/', views.ClienteSignUpView.as_view(), name='cliente_signup'),
     path('accounts/signup/especialista/', views.EspecialistaSignUpView.as_view(), name='especialista_signup'),
+
+    #urls para hacer update cliente
+    path('updatecliente/',views.ClienteUpdate.as_view(),name='updatecliente'),
+
+    #urls para hacer update cliente
+    path('updateespecialista/',views.EspecialistaUpdate.as_view(),name='updateespecialista'),
 
 ]

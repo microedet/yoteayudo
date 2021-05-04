@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'registration',
+    #'registration',
     'jet',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -138,3 +138,5 @@ LOGOUT_REDIRECT_URL='index'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = "core.Usuario"

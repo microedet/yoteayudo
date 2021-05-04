@@ -1,0 +1,23 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+    <main role="main">
+  <div class="container">
+       <br>
+    <br>
+    <br>
+
+    <div class="row mt-3">
+      <div class="col-md-9 mx-auto mb-5">
+        <h2>Registrar una cuenta gratis</h2>
+        <p class="lead">Seleccione el tipo de cuenta que quiere crear</p>
+        <a href="{% url 'cliente_signup' %}" class="btn btn-student btn-lg" role="button">Cliente</a>
+        <a href="{% url 'especialista_signup' %}" class="btn btn-teacher btn-lg" role="button">Especialista</a>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+{% endblock %}

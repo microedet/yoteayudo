@@ -48,7 +48,7 @@
                         {% if user.is_cliente %}
                                 <a href="{% url 'updatecliente' %}"> Perfil de {{ user.username }}</a>
                             {% else %}
-                                <a href="{% url 'updateespecialista' %}"> Perfil de {{ user.username }}</a>
+                                <a href="{% url 'especialista' %}"> Perfil de {{ user.username }}</a>
                             {% endif %}
                                 <a href="{% url 'logout' %}">Cerrar Sesión</a>
 

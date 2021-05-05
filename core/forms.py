@@ -59,3 +59,15 @@ class EspecialistaUpdateForm(forms.ModelForm):
             'biografia':forms.Textarea(attrs={'class':'form-control mt-3','rows':'3','placeholder':'BIOGRAFIA'})
         }
 
+#Formulario para updateespecialista
+class EspecialistaDeleteForm(forms.ModelForm):
+    class Meta:
+        model = Especialista
+        fields = ['foto','dni','nombre','apellido']
+
+        widgets = {
+            'foto': forms.ClearableFileInput(attrs={'class':'form-control-file mt-3'}),
+            'dni': forms.TextInput(attrs={'class':'form-control mt-3', 'placeholder':'DNI'}),
+            'nombre': forms.TextInput(attrs={'class':'form-control mt-3', 'placeholder':'NOMBRE'}),
+            'apellido':forms.TextInput(attrs={'class':'form-control mt-3', 'placeholder':'APELLIDO'})
+        }

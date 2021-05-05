@@ -22,12 +22,18 @@ urlpatterns = [
     path('updatecliente/',ClienteUpdate.as_view(),name='updatecliente'),
 
     #urls para hacer update cliente
-    path('updateespecialista/',EspecialistaUpdate.as_view(),name='updateespecialista'),
+    #path('updateespecialista/<int:pk>',EspecialistaUpdate.as_view(),name='updateespecialista'),
 
     #url para listview de especialista
     path('especialistas/',EspecialistasListView.as_view(),name='especialistas'),
 
     #url para detailview de especialista
-    path('especialista/',EspecialistaDetailView.as_view(),name='especialista'),
+    path('especialista/',views.EspecialistaUpdate.as_view(),name='especialista'),
+
+    #url  para update especialista
+    path('updateespecialista/<int:pk>', views.EspeUpdateView.as_view(), name='espeupdate'),
+
+    # url  para delete especialista
+    path('deleteespecialista/<int:pk>', views.EspeDelete.as_view(), name='espedelete'),
 
 ]

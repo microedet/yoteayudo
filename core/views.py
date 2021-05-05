@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, TemplateView, UpdateView, ListView, DetailView
-from core.forms import ClienteSignupForm, EspecialistaSignupForm, ClienteUpdateForm, EspecialistaUpdateForm
+from django.views.generic import CreateView, TemplateView, UpdateView, ListView, DetailView, DeleteView
+from core.forms import ClienteSignupForm, EspecialistaSignupForm, ClienteUpdateForm, EspecialistaUpdateForm, \
+    EspecialistaDeleteForm
 from django import forms
 from core.models import Cliente, Especialista
 
@@ -118,5 +119,23 @@ class EspecialistasListView(ListView):
     model = Especialista
     #template_name = 'especialista/listview_especialista.html'
 
+
+#no se usa, usamos el updateview
 class EspecialistaDetailView(DetailView):
     model = Especialista
+
+
+#desde aqui el admin puede modificar el especialista
+@method_decorator(staff_member_required, name='dispatch')
+class EspeUpdateView(UpdateView):
+    model = Especialista
+    form_class = EspecialistaUpdateForm
+    success_url = reverse_lazy('especialistas')
+
+
+#desde aqui el admin puede borrar el especialista
+@method_decorator(staff_member_required, name='dispatch')
+class EspeDelete(DeleteView):
+    model = Especialista
+    form_class = EspecialistaDeleteForm
+    success_url = reverse_lazy('especialistas')

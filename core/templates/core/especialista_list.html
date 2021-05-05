@@ -32,9 +32,10 @@
                   <td>{{ especialista.apellido}}</td>
                   <td>{{ especialista.biografia}}</td>
                   <td>
-                        <a class="btn btn-default" >Editar</a>
 
-                        <a class="btn btn-default">Borrar</a>
+                        <a class="btn btn-default" href="{% url 'espeupdate' pk=especialista.idUsuario_id %}" >Editar</a>
+
+                        <a class="btn btn-default" href="{% url 'espedelete' pk=especialista.idUsuario_id %}">Borrar</a>
                   </td>
 
                 </tr>

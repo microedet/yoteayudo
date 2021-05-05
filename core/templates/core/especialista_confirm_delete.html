@@ -1,0 +1,33 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}Perfil Cliente{% endblock %}
+{% block content %}
+    <style>label{display:none}</style>
+    <br>
+    <br>
+    <br>
+<style>.errorlist{color:red;}</style>
+<main role="main">
+  <div class="container">
+    <div class="row mt-3">
+      <div class="col-md-9 mx-auto mb-5">
+          <br>
+          <br>
+        <div>
+            <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+          <h3 class="mb-4">Perfil Especialista</h3>
+                <p>¿Estás seguro de que quieres borrar </p>
+                <p><b>Nombre :"{{ object.nombre }}"</b></p>
+               <p><b>Apellido :"{{ object.apellido }}"</b></p>
+               <p><b>Dirección :"{{ object.direccion }}"</b></p>
+
+
+          <p><input type="submit" class="btn btn-primary btn-block" value="Sí, Borrar el perfil"></p>
+        </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

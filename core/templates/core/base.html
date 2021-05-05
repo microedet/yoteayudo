@@ -11,8 +11,9 @@
 
     <link rel="shortcut icon" href="{% static 'core/images/fav.jpg' %}">
     <link rel="stylesheet" href="{% static 'core/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'core/css/Navigation-with-Button.css' %}">
     <link rel="stylesheet" href="{% static 'core/css/fontawsom-all.min.css' %}">
-    <link rel="stylesheet" href="{% static 'core//plugins/slider/css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'core/plugins/slider/css/owl.carousel.min.css' %}">
     <link rel="stylesheet" href="{% static 'core/plugins/slider/css/owl.theme.default.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'core/css/style.css' %}">
 </head>
@@ -22,45 +23,47 @@
     <!-- ################# Header Starts Here#######################--->
 
     <header id="menu-jk">
-        <nav  class="">
-            <div class="container">
-                <div class="row nav-ro">
-                   <div class="col-lg-3 col-md-4 col-sm-12">
-                       <!--<img src="{% static 'core/images/logo.jpg' %}">-->
-                       <a data-toggle="collapse" data-target="#menu" href="#menu"><i class="fas d-block d-md-none small-menu fa-bars"></i></a>
-                   </div>
-                   <div id="menu" class="col-lg-7 col-md-8 d-none d-md-block no-padding">
-                       <ul>
-                            <li><a href="{% url 'index' %}">Inicio</a></li>
-                            <li><a href="{% url 'about_us' %}">Acerca de</a></li>
-                            <li><a href="{% url 'services' %}">Servicios</a></li>
-                            <!--<li><a href="{% url 'blog' %}">Blog</a></li>
-                            <li><a href="{% url 'gallery' %}">Galeria</a></li>
-                            <li><a href="{% url 'contact_us' %}">Contacto</a></li>-->
+        <nav class="navbar navbar-light navbar-expand-md navigation-clean-button">
+        <div class="container">
+            <!--<a class="navbar-brand" href="#">Clínica Yo Te Ayudo</a>
+            <button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="navbar-toggler-icon"></span></button>-->
+            <div class="collapse navbar-collapse" id="navcol-1">
+                <ul class="nav navbar-nav mr-auto">
+                    <li class="nav-item"><a class="nav-link " href="{% url 'index' %}">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link " href="{% url 'about_us' %}">Acerca de</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'services' %}">Servicios</a></li>
+                    <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#">Gestión </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="{% url 'especialistas' %}">Listado Especialistas</a>
+                            <!--<a class="dropdown-item" href="#">Second Item</a>
+                            <a class="dropdown-item" href="#">Third Item</a></div>-->
+                    </li>
+                </ul><span class="navbar-text actions">
+                    {% if not request.user.is_authenticated %}
+                        <a href="{% url 'login' %}">Acceder</a>
+                        <a href="{% url 'signup' %}">Registrarse</a>
+                    {% else %}
+                        {% if user.is_cliente %}
+                                <a href="{% url 'updatecliente' %}"> Perfil de {{ user.username }}</a>
+                            {% else %}
+                                <a href="{% url 'updateespecialista' %}"> Perfil de {{ user.username }}</a>
+                            {% endif %}
+                                <a href="{% url 'logout' %}">Cerrar Sesión</a>
 
-                        </ul>
-                   </div>
-                   <!--<div class="col-sm-2 d-none d-lg-block">-->
-                        <div class="col-sm-2 d-none d-lg-block no-padding">
-                       <!--<button class="btn btn-success">Reservar ahora</button>-->
-                       {% if not request.user.is_authenticated %}
-                           <button class="btn btn-succes"><a href="{% url 'login' %}">Acceder</a></button>
-                           <button class="btn btn-succes"><a href="{% url 'signup' %}">Registrarse</a></button>
-                           </div>
-                       {% else %}
-                         <div class="col-sm-2 d-none d-lg-block no-padding">
-                             <button class="btn btn-success"><a href="{% url 'updatecliente' %}">{{ user.username }}</a></button>
-                               <button class="btn btn-success"><a href="{% url 'logout' %}">Cerrar Sesión</a></button>
-                         </div>
                        {% endif %}
-                   </div>
-                </div>
+
+                    </span>
             </div>
-        </nav>
+        </div>
+    </nav>
+
     </header>
 
     <!--inicio del bloque de contenido -->
     {% block content %}
+
     {% endblock %}
 
       <!-- ################# Footer Starts Here#######################--->

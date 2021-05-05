@@ -8,6 +8,13 @@ from core.models import Cliente, Especialista
 #decoradores
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
+
+class StaffRequiredMixin(object):
+
+    @method_decorator(staff_member_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(StaffRequiredMixin, self).dispatch(request, *args, **kwargs)
 
 
 # Create your views here.
@@ -106,7 +113,8 @@ class EspecialistaUpdate(UpdateView):
         return especialista
 
 #vista para un listado de especialistas
-class EspecialistaListView(ListView):
+@method_decorator(staff_member_required, name='dispatch')
+class EspecialistasListView(ListView):
     model = Especialista
     #template_name = 'especialista/listview_especialista.html'
 

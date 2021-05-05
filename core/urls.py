@@ -1,7 +1,7 @@
 from django.urls import path,include
 from . import views
 from .views import SignUpView, ClienteSignUpView, EspecialistaSignUpView, ClienteUpdate, EspecialistaUpdate, \
-    EspecialistaListView, EspecialistaDetailView
+    EspecialistaDetailView, EspecialistasListView
 
 urlpatterns = [
     path('', views.index,name = "index"),
@@ -25,7 +25,7 @@ urlpatterns = [
     path('updateespecialista/',EspecialistaUpdate.as_view(),name='updateespecialista'),
 
     #url para listview de especialista
-    path('especialistas/',EspecialistaListView.as_view(),name='especialistas'),
+    path('especialistas/',EspecialistasListView.as_view(),name='especialistas'),
 
     #url para detailview de especialista
     path('especialista/',EspecialistaDetailView.as_view(),name='especialista'),

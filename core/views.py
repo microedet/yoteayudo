@@ -97,7 +97,7 @@ class ClienteUpdate(UpdateView):
 class EspecialistaUpdate(UpdateView):
     form_class = EspecialistaUpdateForm
     success_url = reverse_lazy('index')
-    template_name = 'especialista/update_especialista.html'
+    template_name = 'core/especialista_detail.html'
 
     def get_object(self):
         #recuperamos el objeto que vamos a editar

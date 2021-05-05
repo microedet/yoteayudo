@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, TemplateView, UpdateView
+from django.views.generic import CreateView, TemplateView, UpdateView, ListView, DetailView
 from core.forms import ClienteSignupForm, EspecialistaSignupForm, ClienteUpdateForm, EspecialistaUpdateForm
 from django import forms
 from core.models import Cliente, Especialista
@@ -104,3 +104,11 @@ class EspecialistaUpdate(UpdateView):
 
         especialista , created = Especialista.objects.get_or_create(idUsuario=self.request.user)
         return especialista
+
+#vista para un listado de especialistas
+class EspecialistaListView(ListView):
+    model = Especialista
+    #template_name = 'especialista/listview_especialista.html'
+
+class EspecialistaDetailView(DetailView):
+    model = Especialista

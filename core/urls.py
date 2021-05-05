@@ -1,9 +1,7 @@
-from django.contrib import admin
-
 from django.urls import path,include
-
-import core.views
 from . import views
+from .views import SignUpView, ClienteSignUpView, EspecialistaSignUpView, ClienteUpdate, EspecialistaUpdate, \
+    EspecialistaListView, EspecialistaDetailView
 
 urlpatterns = [
     path('', views.index,name = "index"),
@@ -16,14 +14,20 @@ urlpatterns = [
 
     #urls para hacer los registros
     path('accounts/', include('django.contrib.auth.urls')),
-    path('accounts/signup/', views.SignUpView.as_view(), name='signup'),
-    path('accounts/signup/cliente/', views.ClienteSignUpView.as_view(), name='cliente_signup'),
-    path('accounts/signup/especialista/', views.EspecialistaSignUpView.as_view(), name='especialista_signup'),
+    path('accounts/signup/', SignUpView.as_view(), name='signup'),
+    path('accounts/signup/cliente/', ClienteSignUpView.as_view(), name='cliente_signup'),
+    path('accounts/signup/especialista/', EspecialistaSignUpView.as_view(), name='especialista_signup'),
 
     #urls para hacer update cliente
-    path('updatecliente/',views.ClienteUpdate.as_view(),name='updatecliente'),
+    path('updatecliente/',ClienteUpdate.as_view(),name='updatecliente'),
 
     #urls para hacer update cliente
-    path('updateespecialista/',views.EspecialistaUpdate.as_view(),name='updateespecialista'),
+    path('updateespecialista/',EspecialistaUpdate.as_view(),name='updateespecialista'),
+
+    #url para listview de especialista
+    path('especialistas/',EspecialistaListView.as_view(),name='especialistas'),
+
+    #url para detailview de especialista
+    path('especialista/',EspecialistaDetailView.as_view(),name='especialista'),
 
 ]

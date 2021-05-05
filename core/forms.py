@@ -40,7 +40,7 @@ class ClienteUpdateForm(forms.ModelForm):
             'nombre': forms.TextInput(attrs={'class':'form-control mt-3', 'placeholder':'NOMBRE'}),
             'apellido':forms.TextInput(attrs={'class':'form-control mt-3', 'placeholder':'APELLIDO'}),
             'direccion':forms.TextInput(attrs={'class':'form-control mt-3', 'placeholder':'DIRECCION'}),
-            'fechaNacimiento':forms.DateInput(attrs={'class':'form-control mt-3', 'placeholder':'Fecha Nacimiento'})
+            'fechaNacimiento':forms.DateInput(attrs={'class':'form-control mt-3', 'placeholder':'DD/MM/AAAA'})
         }
 
 #Formulario para updateespecialista
@@ -55,7 +55,7 @@ class EspecialistaUpdateForm(forms.ModelForm):
             'nombre': forms.TextInput(attrs={'class':'form-control mt-3', 'placeholder':'NOMBRE'}),
             'apellido':forms.TextInput(attrs={'class':'form-control mt-3', 'placeholder':'APELLIDO'}),
             'direccion':forms.TextInput(attrs={'class':'form-control mt-3', 'placeholder':'DIRECCION'}),
-            'fechaNacimiento':forms.DateInput(attrs={'class':'form-control mt-3','placeholder':'Fecha Nacimiento'}),
+            'fechaNacimiento':forms.DateInput(attrs={'class':'form-control mt-3','placeholder':'DD/MM/AAAA'}),
             'biografia':forms.Textarea(attrs={'class':'form-control mt-3','rows':'3','placeholder':'BIOGRAFIA'})
         }
 

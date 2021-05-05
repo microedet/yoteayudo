@@ -71,3 +71,4 @@ class EspecialistaDeleteForm(forms.ModelForm):
             'nombre': forms.TextInput(attrs={'class':'form-control mt-3', 'placeholder':'NOMBRE'}),
             'apellido':forms.TextInput(attrs={'class':'form-control mt-3', 'placeholder':'APELLIDO'})
         }
+

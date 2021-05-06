@@ -6,45 +6,55 @@
     <br>
     <br>
     <br>
-<style>.errorlist{color:red;}</style>
-<main role="main">
-  <div class="container">
-    <div class="row mt-3">
-      <div class="col-md-9 mx-auto mb-5">
-          <br>
-          <br><h2>Listado Especialistas</h2>
-        <table class="table table-bordered">
-              <thead class="thead-light">
-                <tr>
-                  <th scope="col">DNI</th>
-                  <th scope="col">Nombre</th>
-                  <th scope="col">Apellidos</th>
-                  <th scope="col">Biografía</th>
-                  <th  scope="col">Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                    {% for especialista in especialista_list %}
-                <tr>
+    <style>.errorlist{color:red;}</style>
+    <main role="main">
+        <div class="container">
+            <div class="row mt-3">
+                <div class="col-md-9 mx-auto mb-5">
+                    <br>
+                    <br><h2>Listado Especialistas</h2>
+                    <table class="table table-bordered">
+                        <thead class="thead-light">
+                        <tr>
+                            {% if user.is_staff %}
+                                <th scope="col">DNI</th>
+                            {% else %}
+                                <th scope="col"></th>
+                            {% endif %}
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Apellidos</th>
+                            <th scope="col">Biografía</th>
+                            <th  scope="col">Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for especialista in especialista_list %}
+                            <tr>
+                                {% if user.is_staff %}
+                                    <td>{{ especialista.dni}}</td>
+                                {% else %}
+                                    <td></td>
+                                {% endif %}
+                                <td>{{ especialista.nombre}}</td>
+                                <td>{{ especialista.apellido}}</td>
+                                <td>{{ especialista.biografia}}</td>
+                                <td>
+                                    {% if user.is_staff %}
+                                        <a class="btn btn-default" href="{% url 'espeupdate' pk=especialista.idUsuario_id %}" >Editar</a>
+                                        <a class="btn btn-default" href="{% url 'espedelete' pk=especialista.idUsuario_id %}">Borrar</a>
+                                    {% else %}
+                                        <a class="btn btn-default" >Solicitar Cita</a>
 
-                  <td>{{ especialista.dni}}</td>
-                  <td>{{ especialista.nombre}}</td>
-                  <td>{{ especialista.apellido}}</td>
-                  <td>{{ especialista.biografia}}</td>
-                  <td>
+                                    {% endif %}
+                                </td>
 
-                        <a class="btn btn-default" href="{% url 'espeupdate' pk=especialista.idUsuario_id %}" >Editar</a>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
-                        <a class="btn btn-default" href="{% url 'espedelete' pk=especialista.idUsuario_id %}">Borrar</a>
-                  </td>
-
-                </tr>
-                    {% endfor %}
-              </tbody>
-            </table>
-      </div>
-    </div>
-  </div>
-
-</main>
+    </main>
 {% endblock %}

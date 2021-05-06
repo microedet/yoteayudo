@@ -2,9 +2,9 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, TemplateView, UpdateView, ListView, DetailView, DeleteView
 from core.forms import ClienteSignupForm, EspecialistaSignupForm, ClienteUpdateForm, EspecialistaUpdateForm, \
-    EspecialistaDeleteForm
+    EspecialistaDeleteForm, CitaForm
 from django import forms
-from core.models import Cliente, Especialista
+from core.models import Cliente, Especialista, Cita
 
 #decoradores
 from django.utils.decorators import method_decorator
@@ -114,7 +114,7 @@ class EspecialistaUpdate(UpdateView):
         return especialista
 
 #vista para un listado de especialistas
-@method_decorator(staff_member_required, name='dispatch')
+@method_decorator(login_required(), name='dispatch')
 class EspecialistasListView(ListView):
     model = Especialista
     #template_name = 'especialista/listview_especialista.html'
@@ -139,3 +139,11 @@ class EspeDelete(DeleteView):
     model = Especialista
     form_class = EspecialistaDeleteForm
     success_url = reverse_lazy('especialistas')
+
+
+#vista para trabajar con citas
+@method_decorator(login_required,name='dispatch')
+class CitaUpdateView(CreateView):
+    model = Cita
+    form_class = CitaForm
+    success_url = reverse_lazy('index')

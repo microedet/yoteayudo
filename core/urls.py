@@ -36,4 +36,7 @@ urlpatterns = [
     # url  para delete especialista
     path('deleteespecialista/<int:pk>', views.EspeDelete.as_view(), name='espedelete'),
 
+    #url para solicitar cita
+    path('solicitarcita/', views.CitaUpdateView.as_view(), name='solicitarcita'),
+
 ]

@@ -42,7 +42,7 @@ class Especialista(models.Model):
     nombre = models.CharField(max_length=50)
     apellido = models.CharField(max_length=100)
     direccion = models.CharField(max_length=100)
-    fechaNacimiento = models.DateField(verbose_name="Fecha de Nacimiento", null=True)
+    fechaNacimiento = models.DateField(null=True,verbose_name="Fecha de Nacimiento")
     foto = models.ImageField(upload_to='core', verbose_name="Foto")
     biografia = models.CharField(max_length=255, verbose_name="biografia")
     idUsuario = models.OneToOneField(Usuario, on_delete=models.CASCADE, primary_key=True,
@@ -58,7 +58,7 @@ class Especialista(models.Model):
 
 
 class Cita(models.Model):
-    fechaAlta = models.DateTimeField(verbose_name="Fecha de Alta", auto_now_add=True)
+    fecha = models.DateField(verbose_name="Fecha")
     idCliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name="CitaidCliente")
     idEspecialista = models.ForeignKey(Especialista, on_delete=models.CASCADE, related_name="CitaidEspecialista")
     informe = models.TextField(verbose_name="Cita Texto Informe")

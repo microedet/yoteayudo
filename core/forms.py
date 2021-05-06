@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from core.models import Usuario, Cliente, Especialista
+from core.models import Usuario, Cliente, Especialista, Cita
 
 
 class ClienteSignupForm(UserCreationForm):
@@ -70,5 +70,21 @@ class EspecialistaDeleteForm(forms.ModelForm):
             'dni': forms.TextInput(attrs={'class':'form-control mt-3', 'placeholder':'DNI'}),
             'nombre': forms.TextInput(attrs={'class':'form-control mt-3', 'placeholder':'NOMBRE'}),
             'apellido':forms.TextInput(attrs={'class':'form-control mt-3', 'placeholder':'APELLIDO'})
+        }
+
+
+#formulario para crear la cita
+class CitaForm(forms.ModelForm):
+    class Meta:
+        model = Cita
+        fields = ['fecha','idCliente','idEspecialista','informe','realizada']
+
+        widgets = {
+            'fecha':forms.DateInput(attrs={'class':'form-control mt-3','placeholder':'DD/MM/AAAA'}),
+            'idCliente': forms.TextInput(attrs={'class':'form-control mt-3', 'placeholder':'idCliente'}),
+            'idEspecialista': forms.TextInput(attrs={'class':'form-control mt-3', 'placeholder':'idEspecialista'}),
+            'informe':forms.TextInput(attrs={'class':'form-control mt-3', 'placeholder':'informe'}),
+            'realizada':forms.NullBooleanSelect(attrs={'class':'form-control mt-3', 'placeholder':'realizada'})
+
         }
 

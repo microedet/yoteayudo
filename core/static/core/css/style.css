@@ -610,3 +610,13 @@ header {
   padding-top: 0px; }
 
 /*# sourceMappingURL=style.css.map */
+/*====================================  CSS  PROPIO =================================*/
+.foto_carnet{
+  height: 30px;
+  width: 30px;
+
+}
+
+.vertical{
+  vertical-align: middle;
+}

@@ -37,8 +37,8 @@
                     <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#">Gestión </a>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="{% url 'especialistas' %}">Listado Especialistas</a>
-                            <!--<a class="dropdown-item" href="#">Second Item</a>
-                            <a class="dropdown-item" href="#">Third Item</a></div>-->
+                            <a class="dropdown-item" href="{% url 'solicitarcita' %}">Solicitar Cita</a>
+                            <!--<a class="dropdown-item" href="#">Third Item</a></div>-->
                     </li>
                 </ul><span class="navbar-text actions">
                     {% if not request.user.is_authenticated %}

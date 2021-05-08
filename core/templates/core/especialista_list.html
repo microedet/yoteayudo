@@ -14,10 +14,11 @@
                     <br>
                     <br><h2>Listado Especialistas</h2>
                     <table class="table table-bordered">
+
                         <thead class="thead-light">
                         <tr>
                             {% if user.is_staff %}
-                                <th scope="col">DNI</th>
+                                <th scope="col">Fotografia</th>
                             {% else %}
                                 <th scope="col"></th>
                             {% endif %}
@@ -29,16 +30,13 @@
                         </thead>
                         <tbody>
                         {% for especialista in especialista_list %}
-                            <tr>
-                                {% if user.is_staff %}
-                                    <td>{{ especialista.dni}}</td>
-                                {% else %}
-                                    <td></td>
-                                {% endif %}
-                                <td>{{ especialista.nombre}}</td>
-                                <td>{{ especialista.apellido}}</td>
-                                <td>{{ especialista.biografia}}</td>
-                                <td>
+                            <tr style="vertical-align: middle">
+
+                                <td><img id="foto_carnet" src="{{ especialista.foto.url }}" style=" width: 100px;height: 120px"></td>
+                                <td style="vertical-align: middle">{{ especialista.nombre}}</td>
+                                <td style="vertical-align: middle">{{ especialista.apellido}}</td>
+                                <td style="vertical-align: middle">{{ especialista.biografia}}</td>
+                                <td style="vertical-align: middle">
                                     {% if user.is_staff %}
                                         <a class="btn btn-default" href="{% url 'espeupdate' pk=especialista.idUsuario_id %}" >Editar</a>
                                         <a class="btn btn-default" href="{% url 'espedelete' pk=especialista.idUsuario_id %}">Borrar</a>

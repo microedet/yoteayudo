@@ -128,7 +128,7 @@ class EspecialistaDetailView(DetailView):
 #desde aqui el admin puede modificar el especialista
 @method_decorator(staff_member_required, name='dispatch')
 class EspeUpdateView(UpdateView):
-    model = Especialista
+    #model = Especialista
     form_class = EspecialistaUpdateForm
     success_url = reverse_lazy('especialistas')
 

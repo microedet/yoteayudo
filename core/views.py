@@ -1,3 +1,4 @@
+import requests
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, TemplateView, UpdateView, ListView, DetailView, DeleteView
@@ -147,3 +148,4 @@ class CitaUpdateView(CreateView):
     model = Cita
     form_class = CitaForm
     success_url = reverse_lazy('index')
+

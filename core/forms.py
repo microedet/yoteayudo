@@ -87,4 +87,3 @@ class CitaForm(forms.ModelForm):
             'realizada':forms.NullBooleanSelect(attrs={'class':'form-control mt-3', 'placeholder':'realizada'})
 
         }
-

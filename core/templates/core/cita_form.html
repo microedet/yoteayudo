@@ -15,9 +15,9 @@
           <br>
         <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
           <h3 class="mb-4">Solicitud de Citas</h3>
-            {{form.as_p}}
-            <p>Fecha:</p>
-            {{form.fecha}}
+            <input type="text" >{{ cita.idCliente }}
+            {{ form.idCliente }}
+            {{ form.as_p}}
 
           <p><input type="submit" class="btn btn-primary btn-block" value="Actualizar"></p>
         </form>

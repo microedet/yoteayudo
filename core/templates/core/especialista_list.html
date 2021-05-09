@@ -32,7 +32,7 @@
                         {% for especialista in especialista_list %}
                             <tr style="vertical-align: middle">
 
-                                <td><img id="foto_carnet" src="{{ especialista.foto.url }}" style=" width: 100px;height: 120px"></td>
+                                <td><img  id="foto_carnet" src="{{ especialista.foto.url }}" style=" width: 100px;height: 120px"></td>
                                 <td style="vertical-align: middle">{{ especialista.nombre}}</td>
                                 <td style="vertical-align: middle">{{ especialista.apellido}}</td>
                                 <td style="vertical-align: middle">{{ especialista.biografia}}</td>
@@ -41,7 +41,7 @@
                                         <a class="btn btn-default" href="{% url 'espeupdate' pk=especialista.idUsuario_id %}" >Editar</a>
                                         <a class="btn btn-default" href="{% url 'espedelete' pk=especialista.idUsuario_id %}">Borrar</a>
                                     {% else %}
-                                        <a class="btn btn-default" >Solicitar Cita</a>
+                                        <a class="btn btn-default"  href="{% url 'solicitarcita' pk1=especialista.idUsuario_id  pk2=especialista.idUsuario_id  %}">Solicitar Cita</a>
 
                                     {% endif %}
                                 </td>

@@ -30,7 +30,7 @@ urlpatterns = [
     #url para detailview de especialista
     path('especialista/',views.EspecialistaUpdate.as_view(),name='especialista'),
 
-    #url  para update especialista
+    # url  para update especialista
     path('updateespecialista/<int:pk>', views.EspeUpdateView.as_view(), name='espeupdate'),
 
     # url  para delete especialista

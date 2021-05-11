@@ -61,7 +61,7 @@ class Cita(models.Model):
     fecha = models.DateField(verbose_name="Fecha")
     idCliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name="CitaidCliente")
     idEspecialista = models.ForeignKey(Especialista, on_delete=models.CASCADE, related_name="CitaidEspecialista")
-    informe = models.TextField(verbose_name="Cita Texto Informe")
+    informe = models.TextField(null=True,verbose_name="Cita Texto Informe")
     realizada = models.BooleanField(verbose_name="Cita realizada", default=False)
 
     class Meta:

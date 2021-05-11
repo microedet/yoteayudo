@@ -77,13 +77,14 @@ class EspecialistaDeleteForm(forms.ModelForm):
 class CitaForm(forms.ModelForm):
     class Meta:
         model = Cita
-        fields = ['fecha','idCliente','idEspecialista','informe','realizada']
+        #fields = ['fecha','idCliente','idEspecialista','informe','realizada']
+        fields = ['fecha','idCliente','idEspecialista']
 
         widgets = {
             'fecha':forms.DateInput(attrs={'class':'form-control mt-3','placeholder':'DD/MM/AAAA'}),
             'idCliente': forms.TextInput(attrs={'class':'form-control mt-3', 'placeholder':'idCliente'}),
             'idEspecialista': forms.TextInput(attrs={'class':'form-control mt-3', 'placeholder':'idEspecialista'}),
-            'informe':forms.TextInput(attrs={'class':'form-control mt-3', 'placeholder':'informe'}),
-            'realizada':forms.NullBooleanSelect(attrs={'class':'form-control mt-3', 'placeholder':'realizada'})
+            #'informe':forms.TextInput(attrs={'class':'form-control mt-3', 'placeholder':'informe'}),
+            #'realizada':forms.NullBooleanSelect(attrs={'class':'form-control mt-3', 'placeholder':'realizada'})
 
         }

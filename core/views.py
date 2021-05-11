@@ -144,8 +144,26 @@ class EspeDelete(DeleteView):
 
 #vista para trabajar con citas
 @method_decorator(login_required,name='dispatch')
-class CitaUpdateView(CreateView):
+class CitaCreateView(CreateView):
     model = Cita
     form_class = CitaForm
     success_url = reverse_lazy('index')
 
+    def get_context_data(self, **kwargs):
+        context = super(CitaCreateView, self).get_context_data(**kwargs)
+        especialista= Especialista.objects.get()
+        cliente=Cliente.objects.get()
+        context['idEspecialista'] = especialista.idUsuario_id
+        context['idCliente'] = cliente.idUsuario_id
+        context['nombre_especialista'] = especialista.nombre
+        context['apellido_especialista'] = especialista.apellido
+
+
+        #print(context)
+        return context
+
+'''
+    def  citacreateview(self):
+        data = self.citacreateview['fecha', 'idCliente', 'idEspecialista', 'informe', 'realizada']
+        return data
+'''

@@ -20,10 +20,10 @@
 
 <body>
 
-    <!-- ################# Header Starts Here#######################--->
+<!-- ################# Header Starts Here#######################--->
 
-    <header id="menu-jk">
-        <nav class="navbar navbar-light navbar-expand-md navigation-clean-button">
+<header id="menu-jk">
+    <nav class="navbar navbar-light navbar-expand-md navigation-clean-button">
         <div class="container">
             <!--<a class="navbar-brand" href="#">Clínica Yo Te Ayudo</a>
             <button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1">
@@ -36,9 +36,13 @@
                     <li class="nav-item"><a class="nav-link" href="{% url 'services' %}">Servicios</a></li>
                     <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#">Gestión </a>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="{% url 'especialistas' %}">Listado Especialistas</a>
-                            <a class="dropdown-item" >Solicitar Cita</a>
+                            {% if request.user.is_staff %}
+                                <a class="dropdown-item" href="{% url 'especialistas' %}">Listado Especialistas</a>
+                            {% else %}
+                                <a class="dropdown-item" href="{% url 'especialistas' %}">Solicitar Cita</a>
+                            {% endif %}
                             <!--<a class="dropdown-item" href="#">Third Item</a></div>-->
+                        <div>
                     </li>
                 </ul><span class="navbar-text actions">
                     {% if not request.user.is_authenticated %}
@@ -46,82 +50,82 @@
                         <a href="{% url 'signup' %}">Registrarse</a>
                     {% else %}
                         {% if user.is_cliente %}
-                                <a href="{% url 'updatecliente' %}"> Perfil de {{ user.username }}</a>
-                            {% else %}
-                                <a href="{% url 'especialista' %}"> Perfil de {{ user.username }}</a>
-                            {% endif %}
-                                <a href="{% url 'logout' %}">Cerrar Sesión</a>
+                            <a href="{% url 'updatecliente' %}"> Perfil de {{ user.username }}</a>
+                        {% else %}
+                            <a href="{% url 'especialista' %}"> Perfil de {{ user.username }}</a>
+                        {% endif %}
+                        <a href="{% url 'logout' %}">Cerrar Sesión</a>
 
-                       {% endif %}
+                    {% endif %}
 
                     </span>
             </div>
         </div>
     </nav>
 
-    </header>
+</header>
 
-    <!--inicio del bloque de contenido -->
-    {% block content %}
+<!--inicio del bloque de contenido -->
+{% block content %}
 
-    {% endblock %}
+{% endblock %}
 
-      <!-- ################# Footer Starts Here#######################--->
+<!-- ################# Footer Starts Here#######################--->
 
 
-    <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <!--<div class="col-md-4 col-sm-12">
-                    <h2>About Us</h2>
-                    <p>
-                        Smart Eye is a leading provider of information technology, consulting, and business process services. Our dedicated employees offer strategic insights, technological expertise and industry experience.
-                    </p>
-                    <p>We focus on technologies that promise to reduce costs, streamline processes and speed time-to-market, Backed by our strong quality processes and rich experience managing global... </p>
-                </div>
-                <div class="col-md-4 col-sm-12">
-                    <h2>Useful Links</h2>
-                    <ul class="list-unstyled link-list">
-                        <li><a ui-sref="about" href="#/about">About us</a><i class="fa fa-angle-right"></i></li>
-                        <li><a ui-sref="portfolio" href="#/portfolio">Portfolio</a><i class="fa fa-angle-right"></i></li>
-                        <li><a ui-sref="products" href="#/products">Latest jobs</a><i class="fa fa-angle-right"></i></li>
-                        <li><a ui-sref="gallery" href="#/gallery">Gallery</a><i class="fa fa-angle-right"></i></li>
-                        <li><a ui-sref="contact" href="#/contact">Contact us</a><i class="fa fa-angle-right"></i></li>
-                    </ul>
-                </div>-->
-                <div class="col-md-4 col-sm-12 map-img">
-                    <h2>Contactar</h2>
-                    <address class="md-margin-bottom-40">
-                        YoteAyudo <br>
-                        Calle Mayor 23 (Cádiz) <br>
-                        Cadiz, Esp <br>
-                        teléfono: +34 66699888 <br>
-                        Email: <a href="mailto:info@anybiz.com" class="">info@yoteayudo.com</a><br>
-                        Web: <a href="#" class="">www.yoteayudo.com</a>
-                    </address>
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <!--<div class="col-md-4 col-sm-12">
+                <h2>About Us</h2>
+                <p>
+                    Smart Eye is a leading provider of information technology, consulting, and business process services. Our dedicated employees offer strategic insights, technological expertise and industry experience.
+                </p>
+                <p>We focus on technologies that promise to reduce costs, streamline processes and speed time-to-market, Backed by our strong quality processes and rich experience managing global... </p>
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <h2>Useful Links</h2>
+                <ul class="list-unstyled link-list">
+                    <li><a ui-sref="about" href="#/about">About us</a><i class="fa fa-angle-right"></i></li>
+                    <li><a ui-sref="portfolio" href="#/portfolio">Portfolio</a><i class="fa fa-angle-right"></i></li>
+                    <li><a ui-sref="products" href="#/products">Latest jobs</a><i class="fa fa-angle-right"></i></li>
+                    <li><a ui-sref="gallery" href="#/gallery">Gallery</a><i class="fa fa-angle-right"></i></li>
+                    <li><a ui-sref="contact" href="#/contact">Contact us</a><i class="fa fa-angle-right"></i></li>
+                </ul>
+            </div>-->
+            <div class="col-md-4 col-sm-12 map-img">
+                <h2>Contactar</h2>
+                <address class="md-margin-bottom-40">
+                    YoteAyudo <br>
+                    Calle Mayor 23 (Cádiz) <br>
+                    Cadiz, Esp <br>
+                    teléfono: +34 66699888 <br>
+                    Email: <a href="mailto:info@anybiz.com" class="">info@yoteayudo.com</a><br>
+                    Web: <a href="#" class="">www.yoteayudo.com</a>
+                </address>
 
-                </div>
             </div>
         </div>
-        
+    </div>
 
-    </footer>
-    <div class="copy">
-            <div class="container">
-                <a href="https://www.smarteyeapps.com/">2021 &copy; Todos los Derechos Reservados</a>
-                
-                <span>
+
+</footer>
+<div class="copy">
+    <div class="container">
+        <a href="https://www.smarteyeapps.com/">2021 &copy; Todos los Derechos Reservados</a>
+
+        <span>
                 <a><i class="fab fa-github"></i></a>
                 <a><i class="fab fa-google-plus-g"></i></a>
                 <a><i class="fab fa-pinterest-p"></i></a>
                 <a><i class="fab fa-twitter"></i></a>
                 <a><i class="fab fa-facebook-f"></i></a>
         </span>
-            </div>
+    </div>
 
-        </div>
-    
-    </body>
+</div>
+
+</body>
 
 <script src="{% static 'core/js/jquery-3.2.1.min.js' %}"></script>
 <script src="{% static 'core/js/popper.min.js' %}"></script>

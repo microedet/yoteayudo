@@ -41,7 +41,7 @@
                                         <a class="btn btn-default" href="{% url 'espeupdate' pk=especialista.idUsuario_id %}" >Editar</a>
                                         <a class="btn btn-default" href="{% url 'espedelete' pk=especialista.idUsuario_id %}">Borrar</a>
                                     {% else %}
-                                        <a class="btn btn-default"  href="{% url 'solicitarcita' pk1=especialista.idUsuario_id  pk2=especialista.idUsuario_id  %}">Solicitar Cita</a>
+                                        <a class="btn btn-default"  href="{% url 'solicitarcita'  %}">Solicitar Cita</a>
 
                                     {% endif %}
                                 </td>

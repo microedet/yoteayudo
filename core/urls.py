@@ -37,6 +37,12 @@ urlpatterns = [
     path('deleteespecialista/<int:pk>', views.EspeDelete.as_view(), name='espedelete'),
 
     #url para solicitar cita
-    path('solicitarcita/', views.CitaCreateView.as_view(), name='solicitarcita'),
+    path('solicitarcita/<int:pk>', views.CitaCreateView.as_view(), name='solicitarcita'),
+
+    #url para listado de citas del cliente
+    path('modificar_consultar_cita_cliente/', views.CitasListView.as_view(), name='modificar_consultar_cita_cliente'),
+
+    #url para modificar la fecha de la consulta del especialista
+    path('cambio_fecha_cita_cliente/', views.CitaUpdateView.as_view(), name='cambio_fecha_cita_cliente'),
 
 ]

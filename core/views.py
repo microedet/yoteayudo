@@ -7,10 +7,11 @@ from core.forms import ClienteSignupForm, EspecialistaSignupForm, ClienteUpdateF
 from django import forms
 from core.models import Cliente, Especialista, Cita
 
-#decoradores
+# decoradores
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
+
 
 class StaffRequiredMixin(object):
 
@@ -23,27 +24,34 @@ class StaffRequiredMixin(object):
 
 
 def index(request):
-    return render(request,"core/index.html")
+    return render(request, "core/index.html")
+
 
 def about_us(request):
-    return render(request,"core/about_us.html")
+    return render(request, "core/about_us.html")
+
 
 def contact_us(request):
-    return render(request,"core/contact_us.html")
+    return render(request, "core/contact_us.html")
+
 
 def gallery(request):
-    return render(request,"core/gallery.html")
+    return render(request, "core/gallery.html")
+
 
 def services(request):
-    return render(request,"core/services.html")
+    return render(request, "core/services.html")
+
 
 def blog(request):
-    return render(request,"core/blog.html")
+    return render(request, "core/blog.html")
+
 
 def login(request):
-    return render(request,"registration/login.html")
+    return render(request, "registration/login.html")
 
-#para registrar el cliente
+
+# para registrar el cliente
 class ClienteSignUpView(CreateView):
     success_url = reverse_lazy('login')
     template_name = 'registration/signup_cliente.html'
@@ -63,7 +71,8 @@ class ClienteSignUpView(CreateView):
             attrs={'class': 'form-control mb-2', 'placeholder': 'Confirmar Contraseña'})
         return form
 
-#para registrar el especialista
+
+# para registrar el especialista
 class EspecialistaSignUpView(CreateView):
     success_url = reverse_lazy('login')
     template_name = 'registration/signup_especialista.html'
@@ -84,11 +93,12 @@ class EspecialistaSignUpView(CreateView):
         return form
 
 
-#da la opcion de elegir el tipo de cuenta
+# da la opcion de elegir el tipo de cuenta
 class SignUpView(TemplateView):
     template_name = 'registration/signup.html'
 
-#vista para el formulario del perfil de cliente
+
+# vista para el formulario del perfil de cliente
 @method_decorator(login_required, name='dispatch')
 class ClienteUpdate(UpdateView):
     form_class = ClienteUpdateForm
@@ -96,12 +106,13 @@ class ClienteUpdate(UpdateView):
     template_name = 'cliente/update_cliente.html'
 
     def get_object(self):
-        #recuperamos el objeto que vamos a editar
+        # recuperamos el objeto que vamos a editar
 
-        cliente , created = Cliente.objects.get_or_create(idUsuario=self.request.user)
+        cliente, created = Cliente.objects.get_or_create(idUsuario=self.request.user)
         return cliente
 
-#vista para el formulario del perfil de especialista
+
+# vista para el formulario del perfil de especialista
 @method_decorator(login_required, name='dispatch')
 class EspecialistaUpdate(UpdateView):
     form_class = EspecialistaUpdateForm
@@ -109,24 +120,25 @@ class EspecialistaUpdate(UpdateView):
     template_name = 'core/especialista_detail.html'
 
     def get_object(self):
-        #recuperamos el objeto que vamos a editar
+        # recuperamos el objeto que vamos a editar
 
-        especialista , created = Especialista.objects.get_or_create(idUsuario=self.request.user)
+        especialista, created = Especialista.objects.get_or_create(idUsuario=self.request.user)
         return especialista
 
-#vista para un listado de especialistas
+
+# vista para un listado de especialistas
 @method_decorator(login_required(), name='dispatch')
 class EspecialistasListView(ListView):
     model = Especialista
-    #template_name = 'especialista/listview_especialista.html'
+    # template_name = 'especialista/listview_especialista.html'
 
 
-#no se usa, usamos el updateview
+# no se usa, usamos el updateview
 class EspecialistaDetailView(DetailView):
     model = Especialista
 
 
-#desde aqui el admin puede modificar el especialista
+# desde aqui el admin puede modificar el especialista
 @method_decorator(staff_member_required, name='dispatch')
 class EspeUpdateView(UpdateView):
     model = Especialista
@@ -134,7 +146,7 @@ class EspeUpdateView(UpdateView):
     success_url = reverse_lazy('especialistas')
 
 
-#desde aqui el admin puede borrar el especialista
+# desde aqui el admin puede borrar el especialista
 @method_decorator(staff_member_required, name='dispatch')
 class EspeDelete(DeleteView):
     model = Especialista
@@ -142,28 +154,45 @@ class EspeDelete(DeleteView):
     success_url = reverse_lazy('especialistas')
 
 
-#vista para trabajar con citas
-@method_decorator(login_required,name='dispatch')
+# vista para trabajar con citas
+@method_decorator(login_required, name='dispatch')
 class CitaCreateView(CreateView):
     model = Cita
     form_class = CitaForm
     success_url = reverse_lazy('index')
 
+    #mediante esta funcion tomamos el valor de la pk, metido en la url, para saber que especialista
+    #solicitamos la consulta
     def get_context_data(self, **kwargs):
         context = super(CitaCreateView, self).get_context_data(**kwargs)
-        especialista= Especialista.objects.get()
-        cliente=Cliente.objects.get()
+        # especialista= Especialista.objects.get(idUsuario=self.model.idEspecialista)
+        especialista = Especialista.objects.get(idUsuario_id=self.kwargs.get('pk'))
+        cliente = Cliente.objects.get()
         context['idEspecialista'] = especialista.idUsuario_id
         context['idCliente'] = cliente.idUsuario_id
         context['nombre_especialista'] = especialista.nombre
         context['apellido_especialista'] = especialista.apellido
 
-
-        #print(context)
+        print(especialista)
         return context
 
-'''
-    def  citacreateview(self):
-        data = self.citacreateview['fecha', 'idCliente', 'idEspecialista', 'informe', 'realizada']
-        return data
-'''
+
+# vista para listado de citas del cliente
+@method_decorator(login_required(), name='dispatch')
+class CitasListView(ListView):
+    model = Cita
+
+
+# desde aqui el cliente puede modificar la fecha de la consulta
+@method_decorator(staff_member_required, name='dispatch')
+class CitaUpdateView(UpdateView):
+    model = Cita
+    form_class = CitaForm
+    success_url = reverse_lazy('modificar_consultar_cita_cliente')
+    template_name = 'core/cita_detail.html'
+
+    def get_object(self):
+        # recuperamos el objeto que vamos a editar
+
+        cita, created = Cita.objects.get_or_create(id=self.request.id)
+        return cita

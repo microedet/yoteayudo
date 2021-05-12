@@ -161,8 +161,8 @@ class CitaCreateView(CreateView):
     form_class = CitaForm
     success_url = reverse_lazy('index')
 
-    #mediante esta funcion tomamos el valor de la pk, metido en la url, para saber que especialista
-    #solicitamos la consulta
+    # mediante esta funcion tomamos el valor de la pk, metido en la url, para saber que especialista
+    # solicitamos la consulta
     def get_context_data(self, **kwargs):
         context = super(CitaCreateView, self).get_context_data(**kwargs)
         # especialista= Especialista.objects.get(idUsuario=self.model.idEspecialista)
@@ -173,7 +173,7 @@ class CitaCreateView(CreateView):
         context['nombre_especialista'] = especialista.nombre
         context['apellido_especialista'] = especialista.apellido
 
-        #print(especialista)
+        # print(especialista)
         return context
 
 
@@ -182,12 +182,21 @@ class CitaCreateView(CreateView):
 class CitasListView(ListView):
     model = Cita
 
+    # funcion que devuelve las citas que no han sido efectuados por el especialista
+    def get_queryset(self):
+        return Cita.objects.filter(realizada=0)
+
 
 # vista para Historico de citas del cliente que ya han sido realizadas
 @method_decorator(login_required(), name='dispatch')
 class CitasListHistorical(ListView):
     model = Cita
     template_name = 'core/cita_list_historical.html'
+
+    #funcion que devuelve las citas que han sido efectuados por el especialista
+    def get_queryset(self):
+        return Cita.objects.filter(realizada=1)
+
 
 
 # desde aqui el cliente puede modificar la fecha de la consulta
@@ -198,13 +207,12 @@ class CitaUpdateView(UpdateView):
     success_url = reverse_lazy('modificar_consultar_cita_cliente')
     template_name = 'core/cita_cambio_fecha.html'
 
-
     # mediante esta funcion tomamos el valor de la pk, metido en la url, para saber que especialista
     # solicitamos la consulta
     def get_context_data(self, **kwargs):
         context = super(CitaUpdateView, self).get_context_data(**kwargs)
         cita = Cita.objects.get(id=self.kwargs.get('pk'))
-        #cliente = Cliente.objects.get(idUsuario_id=self.request.user)
+        # cliente = Cliente.objects.get(idUsuario_id=self.request.user)
         context['fecha'] = cita.fecha
         context['idEspecialista'] = cita.idEspecialista_id
         context['idCliente'] = cita.idCliente_id

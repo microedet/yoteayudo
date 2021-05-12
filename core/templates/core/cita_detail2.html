@@ -16,7 +16,9 @@
         <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
             <h3 class="mb-4">Cambio fecha  de la cita:</h3>
             <h5>con {{ nombre_especialista }} {{ apellido_especialista }}</h5>
-            {{form.as_p}}
+            {{ form.fecha }}
+                        <input type="hidden"  value = {{ idCliente }} name='idCliente' >
+                        <input type="hidden"  value = {{ idEspecialista }} name='idEspecialista' >
           <p><input type="submit" class="btn btn-primary btn-block" value="Actualizar"></p>
         </form>
       </div>

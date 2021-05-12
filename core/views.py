@@ -189,16 +189,8 @@ class CitaUpdateView(UpdateView):
     model = Cita
     form_class = CitaForm
     success_url = reverse_lazy('modificar_consultar_cita_cliente')
-    #template_name = 'core/cita_detail.html'
-    template_name = 'core/cita_detail2.html'
+    template_name = 'core/cita_cambio_fecha.html'
 
-    '''
-    def get_object(self):
-        # recuperamos el objeto que vamos a editar
-
-        cita, created = Cita.objects.get_or_create(id=self.request.id)
-        return cita
-    '''
 
     # mediante esta funcion tomamos el valor de la pk, metido en la url, para saber que especialista
     # solicitamos la consulta
@@ -214,3 +206,11 @@ class CitaUpdateView(UpdateView):
 
         # print(especialista)
         return context
+
+
+# desde aqui se puede borrar cita
+@method_decorator(login_required, name='dispatch')
+class CitaDeleteView(DeleteView):
+    model = Cita
+    form_class = CitaForm
+    success_url = reverse_lazy('modificar_consultar_cita_cliente')

@@ -45,4 +45,7 @@ urlpatterns = [
     #url para modificar la fecha de la consulta del especialista
     path('cambio_fecha_cita_cliente/<int:pk>', views.CitaUpdateView.as_view(), name='cambio_fecha_cita_cliente'),
 
+    #url para borrar la consulta del especialista
+    path('borrar_cita_cliente/<int:pk>', views.CitaDeleteView.as_view(), name='borrar_cita_cliente'),
+
 ]

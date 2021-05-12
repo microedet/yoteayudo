@@ -59,7 +59,7 @@ class EspecialistaUpdateForm(forms.ModelForm):
             'biografia':forms.Textarea(attrs={'class':'form-control mt-3','rows':'3','placeholder':'BIOGRAFIA'})
         }
 
-#Formulario para updateespecialista
+#Formulario para Deleteespecialista
 class EspecialistaDeleteForm(forms.ModelForm):
     class Meta:
         model = Especialista

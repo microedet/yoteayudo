@@ -189,7 +189,8 @@ class CitaUpdateView(UpdateView):
     model = Cita
     form_class = CitaForm
     success_url = reverse_lazy('modificar_consultar_cita_cliente')
-    template_name = 'core/cita_detail.html'
+    #template_name = 'core/cita_detail.html'
+    template_name = 'core/cita_detail2.html'
 
     '''
     def get_object(self):
@@ -198,3 +199,18 @@ class CitaUpdateView(UpdateView):
         cita, created = Cita.objects.get_or_create(id=self.request.id)
         return cita
     '''
+
+    # mediante esta funcion tomamos el valor de la pk, metido en la url, para saber que especialista
+    # solicitamos la consulta
+    def get_context_data(self, **kwargs):
+        context = super(CitaUpdateView, self).get_context_data(**kwargs)
+        cita = Cita.objects.get(id=self.kwargs.get('pk'))
+        #cliente = Cliente.objects.get(idUsuario_id=self.request.user)
+        context['fecha'] = cita.fecha
+        context['idEspecialista'] = cita.idEspecialista_id
+        context['idCliente'] = cita.idCliente_id
+        context['nombre_especialista'] = cita.idEspecialista.nombre
+        context['apellido_especialista'] = cita.idEspecialista.apellido
+
+        # print(especialista)
+        return context

@@ -177,10 +177,17 @@ class CitaCreateView(CreateView):
         return context
 
 
-# vista para listado de citas del cliente
+# vista para listado de citas del cliente que no sido realizadas
 @method_decorator(login_required(), name='dispatch')
 class CitasListView(ListView):
     model = Cita
+
+
+# vista para Historico de citas del cliente que ya han sido realizadas
+@method_decorator(login_required(), name='dispatch')
+class CitasListHistorical(ListView):
+    model = Cita
+    template_name = 'core/cita_list_historical.html'
 
 
 # desde aqui el cliente puede modificar la fecha de la consulta

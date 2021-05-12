@@ -48,4 +48,7 @@ urlpatterns = [
     #url para borrar la consulta del especialista
     path('borrar_cita_cliente/<int:pk>', views.CitaDeleteView.as_view(), name='borrar_cita_cliente'),
 
+    #url para consultar historico de citas
+    path('historico_consulta_cliente', views.CitasListHistorical.as_view(), name='historico_consulta_cliente'),
+
 ]

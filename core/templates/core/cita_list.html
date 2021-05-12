@@ -31,7 +31,7 @@
                                 <td style="vertical-align: middle">{{ cita.idEspecialista.nombre}} {{ cita.idEspecialista.apellido }}</td>
 
                                 <td style="vertical-align: middle">
-                                        <a class="btn btn-default" >Editar</a>
+                                        <a class="btn btn-default"  href="{% url 'cambio_fecha_cita_cliente' pk=cita.id %}" >Editar</a>
                                         <a class="btn btn-default" >Borrar</a>
 
                                 </td>

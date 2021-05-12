@@ -43,6 +43,6 @@ urlpatterns = [
     path('modificar_consultar_cita_cliente/', views.CitasListView.as_view(), name='modificar_consultar_cita_cliente'),
 
     #url para modificar la fecha de la consulta del especialista
-    path('cambio_fecha_cita_cliente/', views.CitaUpdateView.as_view(), name='cambio_fecha_cita_cliente'),
+    path('cambio_fecha_cita_cliente/<int:pk>', views.CitaUpdateView.as_view(), name='cambio_fecha_cita_cliente'),
 
 ]

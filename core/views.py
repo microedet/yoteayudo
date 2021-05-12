@@ -167,13 +167,13 @@ class CitaCreateView(CreateView):
         context = super(CitaCreateView, self).get_context_data(**kwargs)
         # especialista= Especialista.objects.get(idUsuario=self.model.idEspecialista)
         especialista = Especialista.objects.get(idUsuario_id=self.kwargs.get('pk'))
-        cliente = Cliente.objects.get()
+        cliente = Cliente.objects.get(idUsuario_id=self.request.user)
         context['idEspecialista'] = especialista.idUsuario_id
         context['idCliente'] = cliente.idUsuario_id
         context['nombre_especialista'] = especialista.nombre
         context['apellido_especialista'] = especialista.apellido
 
-        print(especialista)
+        #print(especialista)
         return context
 
 
@@ -184,15 +184,17 @@ class CitasListView(ListView):
 
 
 # desde aqui el cliente puede modificar la fecha de la consulta
-@method_decorator(staff_member_required, name='dispatch')
+@method_decorator(login_required, name='dispatch')
 class CitaUpdateView(UpdateView):
     model = Cita
     form_class = CitaForm
     success_url = reverse_lazy('modificar_consultar_cita_cliente')
     template_name = 'core/cita_detail.html'
 
+    '''
     def get_object(self):
         # recuperamos el objeto que vamos a editar
 
         cita, created = Cita.objects.get_or_create(id=self.request.id)
         return cita
+    '''

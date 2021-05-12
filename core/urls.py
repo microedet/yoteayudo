@@ -51,4 +51,7 @@ urlpatterns = [
     #url para consultar historico de citas
     path('historico_consulta_cliente', views.CitasListHistorical.as_view(), name='historico_consulta_cliente'),
 
+    #url para consultar detalles de cita historica
+    path('consulta_historica/<int:pk>', views.CitaDetailHistorical.as_view(), name='consulta_historica'),
+
 ]

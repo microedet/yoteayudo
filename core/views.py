@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, TemplateView, UpdateView, ListView, DetailView, DeleteView
 from core.forms import ClienteSignupForm, EspecialistaSignupForm, ClienteUpdateForm, EspecialistaUpdateForm, \
-    EspecialistaDeleteForm, CitaForm
+    EspecialistaDeleteForm, CitaForm, CitaDetailHistorical
 from django import forms
 from core.models import Cliente, Especialista, Cita
 
@@ -198,6 +198,32 @@ class CitasListHistorical(ListView):
         return Cita.objects.filter(realizada=1)
 
 
+# Vista para ver el detalle de una cita historica
+@method_decorator(login_required(), name='dispatch')
+class CitaDetailHistorical(DetailView):
+    model = Cita
+    form_class= CitaDetailHistorical
+    #success_url = reverse_lazy('historico_consulta_cliente')
+    template_name = 'core/cita_detail_historical.html'
+
+
+    # mediante esta funcion tomamos el valor de la pk, metido en la url, para saber que cita historica
+    # solicitamos la consulta
+    def get_context_data(self, **kwargs):
+        context = super(CitaDetailHistorical, self).get_context_data(**kwargs)
+        cita = Cita.objects.get(id=self.kwargs.get('pk'))
+        context['fecha'] = cita.fecha
+        context['idEspecialista'] = cita.idEspecialista_id
+        context['idCliente'] = cita.idCliente_id
+        context['informe'] = cita.informe
+        context['realizada'] = cita.realizada
+        context['nombre_especialista'] = cita.idEspecialista.nombre
+        context['apellido_especialista'] = cita.idEspecialista.apellido
+
+        # print(especialista)
+        return context
+
+
 
 # desde aqui el cliente puede modificar la fecha de la consulta
 @method_decorator(login_required, name='dispatch')
@@ -229,3 +255,4 @@ class CitaDeleteView(DeleteView):
     model = Cita
     form_class = CitaForm
     success_url = reverse_lazy('modificar_consultar_cita_cliente')
+

@@ -1,11 +1,14 @@
-import requests
+from django.http import request
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, TemplateView, UpdateView, ListView, DetailView, DeleteView
+
+from core.decorators import especialista_required, cliente_required
 from core.forms import ClienteSignupForm, EspecialistaSignupForm, ClienteUpdateForm, EspecialistaUpdateForm, \
     EspecialistaDeleteForm, CitaForm, CitaDetailHistorical
 from django import forms
 from core.models import Cliente, Especialista, Cita
+from django.contrib.auth.models import User
 
 # decoradores
 from django.utils.decorators import method_decorator
@@ -18,9 +21,6 @@ class StaffRequiredMixin(object):
     @method_decorator(staff_member_required)
     def dispatch(self, request, *args, **kwargs):
         return super(StaffRequiredMixin, self).dispatch(request, *args, **kwargs)
-
-
-# Create your views here.
 
 
 def index(request):
@@ -99,7 +99,7 @@ class SignUpView(TemplateView):
 
 
 # vista para el formulario del perfil de cliente
-@method_decorator(login_required, name='dispatch')
+@method_decorator(cliente_required, name='dispatch')
 class ClienteUpdate(UpdateView):
     form_class = ClienteUpdateForm
     success_url = reverse_lazy('index')
@@ -113,7 +113,7 @@ class ClienteUpdate(UpdateView):
 
 
 # vista para el formulario del perfil de especialista
-@method_decorator(login_required, name='dispatch')
+@method_decorator(especialista_required, name='dispatch')
 class EspecialistaUpdate(UpdateView):
     form_class = EspecialistaUpdateForm
     success_url = reverse_lazy('index')
@@ -155,7 +155,7 @@ class EspeDelete(DeleteView):
 
 
 # vista para trabajar con citas
-@method_decorator(login_required, name='dispatch')
+@method_decorator(cliente_required, name='dispatch')
 class CitaCreateView(CreateView):
     model = Cita
     form_class = CitaForm
@@ -178,34 +178,34 @@ class CitaCreateView(CreateView):
 
 
 # vista para listado de citas del cliente que no sido realizadas
-@method_decorator(login_required(), name='dispatch')
+@method_decorator(cliente_required, name='dispatch')
 class CitasListView(ListView):
     model = Cita
 
     # funcion que devuelve las citas que no han sido efectuados por el especialista
+    # y que son del cliente
     def get_queryset(self):
-        return Cita.objects.filter(realizada=0)
+        return Cita.objects.filter(realizada=0).filter(idCliente=self.request.user.id)
 
 
 # vista para Historico de citas del cliente que ya han sido realizadas
-@method_decorator(login_required(), name='dispatch')
+@method_decorator(cliente_required, name='dispatch')
 class CitasListHistorical(ListView):
     model = Cita
     template_name = 'core/cita_list_historical.html'
 
-    #funcion que devuelve las citas que han sido efectuados por el especialista
+    # funcion que devuelve las citas que han sido efectuados por el especialista y son del cliente
     def get_queryset(self):
-        return Cita.objects.filter(realizada=1)
+        return Cita.objects.filter(realizada=1).filter(idCliente=self.request.user.id)
 
 
 # Vista para ver el detalle de una cita historica
-@method_decorator(login_required(), name='dispatch')
+@method_decorator(cliente_required or especialista_required, name='dispatch')
 class CitaDetailHistorical(DetailView):
     model = Cita
-    form_class= CitaDetailHistorical
-    #success_url = reverse_lazy('historico_consulta_cliente')
+    form_class = CitaDetailHistorical
+    # success_url = reverse_lazy('historico_consulta_cliente')
     template_name = 'core/cita_detail_historical.html'
-
 
     # mediante esta funcion tomamos el valor de la pk, metido en la url, para saber que cita historica
     # solicitamos la consulta
@@ -224,9 +224,8 @@ class CitaDetailHistorical(DetailView):
         return context
 
 
-
 # desde aqui el cliente puede modificar la fecha de la consulta
-@method_decorator(login_required, name='dispatch')
+@method_decorator(cliente_required, name='dispatch')
 class CitaUpdateView(UpdateView):
     model = Cita
     form_class = CitaForm
@@ -250,9 +249,19 @@ class CitaUpdateView(UpdateView):
 
 
 # desde aqui se puede borrar cita
-@method_decorator(login_required, name='dispatch')
+@method_decorator(cliente_required, name='dispatch')
 class CitaDeleteView(DeleteView):
     model = Cita
     form_class = CitaForm
     success_url = reverse_lazy('modificar_consultar_cita_cliente')
 
+
+# desde aqui el especialista puede listar los clientes que tienen cita con el
+@method_decorator(especialista_required, name='dispatch')
+class EspecialistaConsultaClientes(ListView):
+    model = Cita
+    template_name = 'core/especialista_consulta_cliente.html'
+
+    # funcion que devuelve las citas que no han sido efectuados por el especialista
+    def get_queryset(self):
+        return Cita.objects.filter(realizada=0).filter(idEspecialista=self.request.user.id)

@@ -18,7 +18,8 @@
                         <thead class="thead-light">
                         <tr>
                             <th scope="col">Fecha</th>
-                            <th scope="col">Especialista</th>
+                            <th scope="col">Foto</th>
+                            <th scope="col">Informe</th>
                             <th  scope="col">Consultar</th>
                         </tr>
                         </thead>
@@ -28,7 +29,9 @@
 
 
                                 <td style="vertical-align: middle">{{ cita.fecha}}</td>
-                                <td style="vertical-align: middle">{{ cita.idEspecialista.nombre}} {{ cita.idEspecialista.apellido }}</td>
+                                <td> <img  id="foto_carnet" src="{{ cita.idCliente.foto.url }}" style=" width: 100px;height: 120px"></td>
+
+                                <td style="vertical-align: middle">{{ cita.informe}}</td>
 
                                 <td style="vertical-align: middle">
 

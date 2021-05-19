@@ -189,7 +189,7 @@ class CitasListView(ListView):
 
 
 # vista para Historico de citas del cliente que ya han sido realizadas
-@method_decorator(cliente_required, name='dispatch')
+@method_decorator(cliente_required(), name='dispatch')
 class CitasListHistorical(ListView):
     model = Cita
     template_name = 'core/cita_list_historical.html'
@@ -200,11 +200,11 @@ class CitasListHistorical(ListView):
 
 
 # Vista para ver el detalle de una cita historica
-@method_decorator(cliente_required or especialista_required, name='dispatch')
+@method_decorator(login_required(), name='dispatch')
 class CitaDetailHistorical(DetailView):
     model = Cita
     form_class = CitaDetailHistorical
-    # success_url = reverse_lazy('historico_consulta_cliente')
+    success_url = reverse_lazy('index')
     template_name = 'core/cita_detail_historical.html'
 
     # mediante esta funcion tomamos el valor de la pk, metido en la url, para saber que cita historica
@@ -299,20 +299,29 @@ class EspecialistaConsultaHistoricoClientes(ListView):
     model = Cita
     template_name = 'core/especialista_consulta_historico_cliente.html'
 
+    # funcion que devuelve las citas que no han sido efectuados por el especialista
+    def get_queryset(self,**kwargs):
+        # return Cita.objects.filter(realizada=1).filter(idEspecialista=self.request.user.id)
+        
+        return Cita.objects.filter(realizada=1).filter(idCliente=self.kwargs.get('pk')).filter(idEspecialista=self.request.user.id)
+
+
+
     # mediante esta funcion tomamos el valor de la pk, metido en la url, para saber que especialista
     # solicitamos la consulta
     def get_context_data(self, **kwargs):
         context = super(EspecialistaConsultaHistoricoClientes, self).get_context_data(**kwargs)
         cita = Cita.objects.get(id=self.kwargs.get('pk'))
+        especialista=Especialista.objects.get(idUsuario_id=self.request.user)
         context['id'] = cita.id
         context['fecha'] = cita.fecha
-        context['idEspecialista'] = cita.idEspecialista_id
+        context['idEspecialista'] = especialista.idUsuario_id
         context['idCliente'] = cita.idCliente_id
         context['informe'] = cita.informe
         context['realizada'] = cita.realizada
 
         return context
 
-    # funcion que devuelve las citas que no han sido efectuados por el especialista
-    def get_queryset(self):
-        return Cita.objects.filter(realizada=1).filter(idEspecialista=self.request.user.id)
+
+
+

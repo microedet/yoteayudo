@@ -6,23 +6,28 @@
     <br>
     <br>
     <br>
-<style>.errorlist{color:red;}</style>
-<main role="main">
-  <div class="container">
-    <div class="row mt-3">
-      <div class="col-md-9 mx-auto mb-5">
-          <br>
-          <br>
-        <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
-          <h3 class="mb-4">Detalle cita Historica</h3>
-            <p><b>Fecha de la Cita:</b>  {{fecha}}</p>
-            <p><b>Especialista que atendió la  Cita:</b>  {{ nombre_especialista }} {{ apellido_especialista }} </p>
-            <p><b>Informe de la  Cita:</b>  {{ informe }} </p>
+    <style>.errorlist{color:red;}</style>
+    <main role="main">
+        <div class="container">
+            <div class="row mt-3">
+                <div class="col-md-9 mx-auto mb-5">
+                    <br>
+                    <br>
+                    <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+                        <h3 class="mb-4">Detalle cita Historica</h3>
+                        <p><b>Fecha de la Cita:</b>  {{fecha}}</p>
+                        <p><b>Especialista que atendió la  Cita:</b>  {{ nombre_especialista }} {{ apellido_especialista }} </p>
+                        <p><b>Informe de la  Cita:</b>  {{ informe }} </p>
 
-            <p><a  type="button" class="btn btn-primary btn-block mt10"  href="{% url 'historico_consulta_cliente' %}" >Volver</a></p>
-        </form>
-      </div>
-    </div>
-  </div>
-</main>
+                        {% if request.user.is_cliente %}
+                            <p><a  type="button" class="btn btn-primary btn-block mt10"  href="{% url 'historico_consulta_cliente' %}" >Volver</a></p>
+                        {% else %}
+                            <p><a  type="button" class="btn btn-primary btn-block mt10"  href="{% url 'especialista_consulta_historico_cliente' pk=cita.idCliente_id %}" >Volver</a></p>
+
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
 {% endblock %}

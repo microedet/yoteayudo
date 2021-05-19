@@ -5,7 +5,7 @@ from django.views.generic import CreateView, TemplateView, UpdateView, ListView,
 
 from core.decorators import especialista_required, cliente_required
 from core.forms import ClienteSignupForm, EspecialistaSignupForm, ClienteUpdateForm, EspecialistaUpdateForm, \
-    EspecialistaDeleteForm, CitaForm, CitaDetailHistorical
+    EspecialistaDeleteForm, CitaForm, CitaDetailHistorical, CitaFormModificaEspe
 from django import forms
 from core.models import Cliente, Especialista, Cita
 from django.contrib.auth.models import User
@@ -265,3 +265,54 @@ class EspecialistaConsultaClientes(ListView):
     # funcion que devuelve las citas que no han sido efectuados por el especialista
     def get_queryset(self):
         return Cita.objects.filter(realizada=0).filter(idEspecialista=self.request.user.id)
+
+
+# desde aqui el especialista tiene acceso a una cita pedida por el cliente y le cambia los parametros para
+# poner el documento y poner que ha sido realizada
+@method_decorator(especialista_required, name='dispatch')
+class EspecialistaEditaConsulta(UpdateView):
+    model = Cita
+    form_class = CitaFormModificaEspe
+    success_url = reverse_lazy('especialista_consulta_cliente')
+    template_name = 'core/especialista_edita_consulta.html'
+
+    # mediante esta funcion tomamos el valor de la pk, metido en la url, para saber que especialista
+    # solicitamos la consulta
+    def get_context_data(self, **kwargs):
+        context = super(EspecialistaEditaConsulta, self).get_context_data(**kwargs)
+        # especialista= Especialista.objects.get(idUsuario=self.model.idEspecialista)
+        # especialista = Especialista.objects.get(idUsuario_id=self.kwargs.get('pk'))
+        cita = Cita.objects.get(id=self.kwargs.get('pk'))
+        context['id'] = cita.id
+        context['fecha'] = cita.fecha
+        context['idEspecialista'] = cita.idEspecialista_id
+        context['idCliente'] = cita.idCliente_id
+        context['informe'] = cita.informe
+        context['realizada'] = cita.realizada
+
+        return context
+
+
+# desde aqui el especialista puede listar los historicos de un cliene los clientes que tienen cita con el
+@method_decorator(especialista_required, name='dispatch')
+class EspecialistaConsultaHistoricoClientes(ListView):
+    model = Cita
+    template_name = 'core/especialista_consulta_historico_cliente.html'
+
+    # mediante esta funcion tomamos el valor de la pk, metido en la url, para saber que especialista
+    # solicitamos la consulta
+    def get_context_data(self, **kwargs):
+        context = super(EspecialistaConsultaHistoricoClientes, self).get_context_data(**kwargs)
+        cita = Cita.objects.get(id=self.kwargs.get('pk'))
+        context['id'] = cita.id
+        context['fecha'] = cita.fecha
+        context['idEspecialista'] = cita.idEspecialista_id
+        context['idCliente'] = cita.idCliente_id
+        context['informe'] = cita.informe
+        context['realizada'] = cita.realizada
+
+        return context
+
+    # funcion que devuelve las citas que no han sido efectuados por el especialista
+    def get_queryset(self):
+        return Cita.objects.filter(realizada=1).filter(idEspecialista=self.request.user.id)

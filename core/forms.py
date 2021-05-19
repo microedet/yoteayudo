@@ -89,6 +89,22 @@ class CitaForm(forms.ModelForm):
 
         }
 
+#formulario para domificar la cita por el especialista
+class CitaFormModificaEspe(forms.ModelForm):
+    class Meta:
+        model = Cita
+        fields = ['fecha','idCliente','idEspecialista','informe','realizada']
+        #fields = ['fecha','idCliente','idEspecialista']
+
+        widgets = {
+            'fecha':forms.DateInput(attrs={'class':'form-control mt-3','placeholder':'DD/MM/AAAA'}),
+            'idCliente': forms.TextInput(attrs={'class':'form-control mt-3', 'placeholder':'idCliente'}),
+            'idEspecialista': forms.TextInput(attrs={'class':'form-control mt-3', 'placeholder':'idEspecialista'}),
+            'informe':forms.TextInput(attrs={'class':'form-control mt-3', 'placeholder':'informe'}),
+            'realizada':forms.NullBooleanSelect(attrs={'class':'form-control mt-3', 'placeholder':'realizada'})
+
+        }
+
 #formulario para ver los detalles de una cita historica
 class CitaDetailHistorical(forms.ModelForm):
     class Meta:

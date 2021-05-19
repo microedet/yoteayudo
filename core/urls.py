@@ -54,7 +54,15 @@ urlpatterns = [
     #url para consultar detalles de cita historica
     path('consulta_historica/<int:pk>', views.CitaDetailHistorical.as_view(), name='consulta_historica'),
 
-    #url para que el paciente consulte los pacientes
+    #url para que el especialista consulte los pacientes
     path('especialista_consulta_cliente', views.EspecialistaConsultaClientes.as_view(), name='especialista_consulta_cliente'),
+
+    #url para que el especialista vea los detalles de una consulta no realizada y la modifica
+    path('especialista_edita_consulta/<int:pk>', views.EspecialistaEditaConsulta.as_view(),
+         name='especialista_edita_consulta'),
+
+    # url para que el especialista vea el historial de cada cliente
+    path('especialista_consulta_historico_cliente/<int:pk>', views.EspecialistaConsultaHistoricoClientes.as_view(),
+         name='especialista_consulta_historico_cliente'),
 
 ]

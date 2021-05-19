@@ -23,8 +23,6 @@
                                 <th scope="col"></th>
                             {% endif %}
                             <th scope="col">Cliente: Nombre Apellido</th>
-                            <!--<th scope="col">Apellidos</th>
-                            <th scope="col">Biografía</th>-->
                             <th  scope="col">Acciones</th>
                         </tr>
                         </thead>
@@ -41,8 +39,8 @@
                                         <a class="btn btn-default" >Editar</a>
                                         <a class="btn btn-default">Borrar</a>
                                     {% else %}
-                                        <a class="btn btn-default" >Detalles Consulta</a>
-                                        <a class="btn btn-default" >Consultar Historico</a>
+                                        <a class="btn btn-default" href="{% url 'especialista_edita_consulta' pk=cita.id %}" >Detalles Consulta</a>
+                                        <a class="btn btn-default" href="{% url 'especialista_consulta_historico_cliente' pk=cita.idCliente_id %}" >Consultar Historico</a>
 
 
                                     {% endif %}

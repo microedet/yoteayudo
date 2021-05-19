@@ -16,6 +16,7 @@
                     <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
                         <h3 class="mb-4">Solicitud de Cita</h3>
                         <h5 class="mb-4">Cita con {{ nombre_especialista }} {{ apellido_especialista }} para el día:</h5>
+                        {{ form.fecha.errors }}
                         {{ form.fecha }}
                         <input type="hidden"  value = {{ idCliente }} name='idCliente' >
                         <input type="hidden"  value = {{ idEspecialista }} name='idEspecialista' >

@@ -1,5 +1,9 @@
+from datetime import datetime, date
+
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
+from sqlalchemy.sql.functions import now
+
 from core.models import Usuario, Cliente, Especialista, Cita
 
 
@@ -88,6 +92,16 @@ class CitaForm(forms.ModelForm):
             #'realizada':forms.NullBooleanSelect(attrs={'class':'form-control mt-3', 'placeholder':'realizada'})
 
         }
+
+    def clean_fecha(self):
+
+        fecha = self.cleaned_data.get('fecha', None)
+        if fecha < date.today():
+              raise forms.ValidationError('fecha ya pasada , no puede pedir cita')
+        if fecha == date.today():
+            raise forms.ValidationError('no puede pedir cita el mismo dia')
+        return fecha
+
 
 #formulario para domificar la cita por el especialista
 class CitaFormModificaEspe(forms.ModelForm):

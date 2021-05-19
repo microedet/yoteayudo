@@ -2,6 +2,7 @@ from django.http import request
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, TemplateView, UpdateView, ListView, DetailView, DeleteView
+from sqlalchemy.sql.functions import now
 
 from core.decorators import especialista_required, cliente_required
 from core.forms import ClienteSignupForm, EspecialistaSignupForm, ClienteUpdateForm, EspecialistaUpdateForm, \
@@ -9,6 +10,8 @@ from core.forms import ClienteSignupForm, EspecialistaSignupForm, ClienteUpdateF
 from django import forms
 from core.models import Cliente, Especialista, Cita
 from django.contrib.auth.models import User
+
+from datetime import datetime
 
 # decoradores
 from django.utils.decorators import method_decorator
@@ -246,6 +249,7 @@ class CitaUpdateView(UpdateView):
 
         # print(especialista)
         return context
+
 
 
 # desde aqui se puede borrar cita

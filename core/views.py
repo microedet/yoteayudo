@@ -188,7 +188,7 @@ class CitasListView(ListView):
     # funcion que devuelve las citas que no han sido efectuados por el especialista
     # y que son del cliente
     def get_queryset(self):
-        return Cita.objects.filter(realizada=0).filter(idCliente=self.request.user.id)
+        return Cita.objects.filter(realizada=0).filter(idCliente=self.request.user.id).order_by('fecha')
 
 
 # vista para Historico de citas del cliente que ya han sido realizadas
@@ -196,10 +196,10 @@ class CitasListView(ListView):
 class CitasListHistorical(ListView):
     model = Cita
     template_name = 'core/cita_list_historical.html'
-
+    ordering = ['-fecha']
     # funcion que devuelve las citas que han sido efectuados por el especialista y son del cliente
     def get_queryset(self):
-        return Cita.objects.filter(realizada=1).filter(idCliente=self.request.user.id)
+        return Cita.objects.filter(realizada=1).filter(idCliente=self.request.user.id).order_by('-fecha')
 
 
 # Vista para ver el detalle de una cita historica
@@ -268,7 +268,7 @@ class EspecialistaConsultaClientes(ListView):
 
     # funcion que devuelve las citas que no han sido efectuados por el especialista
     def get_queryset(self):
-        return Cita.objects.filter(realizada=0).filter(idEspecialista=self.request.user.id)
+        return Cita.objects.filter(realizada=0).filter(idEspecialista=self.request.user.id).order_by('fecha')
 
 
 # desde aqui el especialista tiene acceso a una cita pedida por el cliente y le cambia los parametros para
@@ -307,7 +307,7 @@ class EspecialistaConsultaHistoricoClientes(ListView):
     def get_queryset(self,**kwargs):
         # return Cita.objects.filter(realizada=1).filter(idEspecialista=self.request.user.id)
         
-        return Cita.objects.filter(realizada=1).filter(idCliente=self.kwargs.get('pk')).filter(idEspecialista=self.request.user.id)
+        return Cita.objects.filter(realizada=1).filter(idCliente=self.kwargs.get('pk')).filter(idEspecialista=self.request.user.id).order_by('-fecha')
 
 
 

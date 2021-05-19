@@ -67,7 +67,7 @@ class Cita(models.Model):
     class Meta:
         verbose_name = "cita"
         verbose_name_plural = 'citas'
-        ordering = ['fecha']
+        ordering = ['-fecha']
 
     def __str__(self):
         return str(self.id) + " " + str(self.idCliente) + " " + str(self.idEspecialista)

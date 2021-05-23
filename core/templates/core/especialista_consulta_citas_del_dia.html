@@ -1,0 +1,60 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}Especialista consulta cliente{% endblock %}
+{% block content %}
+    <style>label{display:none}</style>
+    <br>
+    <br>
+    <br>
+    <style>.errorlist{color:red;}</style>
+    <main role="main">
+        <div class="container">
+            <div class="row mt-3">
+                <div class="col-md-9 mx-auto mb-5">
+                    <br>
+                    <br><h2>Listado Clientes</h2>
+                    <table class="table table-bordered">
+
+                        <thead class="thead-light">
+                        <tr>
+                            {% if user.is_especialista %}
+                                <th scope="col">Fotografia</th>
+                            {% else %}
+                                <th scope="col"></th>
+                            {% endif %}
+                            <th scope="col">Fecha Cita</th>
+                            <th scope="col">Cliente</th>
+                            <th  scope="col">Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for cita in cita_list %}
+                            <tr style="vertical-align: middle">
+
+                                <td><img  id="foto_carnet" src="{{ cita.idCliente.foto.url }}" style=" width: 100px;height: 120px"></td>
+                                <td style="vertical-align: middle">{{ cita.fecha }}</td>
+                                <td style="vertical-align: middle">{{ cita.idCliente.nombre }} {{ cita.idCliente.apellido }}</td>
+                                <!--<td style="vertical-align: middle"></td>
+                                <td style="vertical-align: middle"></td>-->
+                                <td style="vertical-align: middle">
+                                    {% if user.is_staff %}
+                                        <a class="btn btn-default" >Editar</a>
+                                        <a class="btn btn-default">Borrar</a>
+                                    {% else %}
+                                        <a class="btn btn-default" href="{% url 'especialista_edita_consulta' pk=cita.id %}" >Detalles Consulta</a>
+                                        <a class="btn btn-default" href="{% url 'especialista_consulta_historico_cliente' pk=cita.idCliente_id %}" >Consultar Historico</a>
+
+
+                                    {% endif %}
+                                </td>
+
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+{% endblock %}

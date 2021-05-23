@@ -3,6 +3,7 @@ from . import views
 from .views import SignUpView, ClienteSignUpView, EspecialistaSignUpView, ClienteUpdate, EspecialistaUpdate, \
     EspecialistaDetailView, EspecialistasListView
 
+
 urlpatterns = [
     path('', views.index,name = "index"),
     path('about_us/',views.about_us,name='about_us'),
@@ -65,4 +66,9 @@ urlpatterns = [
     path('especialista_consulta_historico_cliente/<int:pk>', views.EspecialistaConsultaHistoricoClientes.as_view(),
          name='especialista_consulta_historico_cliente'),
 
+    # url para que el especialista consulte las citas del dia presente
+    path('especialista_consulta_citas_del_dia/', views.EspecialistaConsultaCitasDelDia.as_view(),
+         name='especialista_consulta_citas_del_dia'),
+
 ]
+

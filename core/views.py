@@ -1,17 +1,16 @@
-from django.http import request
+import dateutil.utils
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, TemplateView, UpdateView, ListView, DetailView, DeleteView
-from sqlalchemy.sql.functions import now
 
 from core.decorators import especialista_required, cliente_required
 from core.forms import ClienteSignupForm, EspecialistaSignupForm, ClienteUpdateForm, EspecialistaUpdateForm, \
     EspecialistaDeleteForm, CitaForm, CitaDetailHistorical, CitaFormModificaEspe
 from django import forms
 from core.models import Cliente, Especialista, Cita
-from django.contrib.auth.models import User
 
-from datetime import datetime
+
+
 
 # decoradores
 from django.utils.decorators import method_decorator
@@ -239,7 +238,12 @@ class CitaUpdateView(UpdateView):
     # solicitamos la consulta
     def get_context_data(self, **kwargs):
         context = super(CitaUpdateView, self).get_context_data(**kwargs)
-        cita = Cita.objects.get(id=self.kwargs.get('pk'))
+
+        #al hacer el filtrado por id con la pk y idcliente resulta que si no corresponde a idCLiente logeado da error
+        cita = Cita.objects.get(id=self.kwargs.get('pk'),idCliente=self.request.user.id)
+        #if cita.DoesNotExist:
+            #template_name = 'core/index.html'
+
         # cliente = Cliente.objects.get(idUsuario_id=self.request.user)
         context['fecha'] = cita.fecha
         context['idEspecialista'] = cita.idEspecialista_id
@@ -247,7 +251,7 @@ class CitaUpdateView(UpdateView):
         context['nombre_especialista'] = cita.idEspecialista.nombre
         context['apellido_especialista'] = cita.idEspecialista.apellido
 
-        # print(especialista)
+        print(cita)
         return context
 
 
@@ -325,6 +329,20 @@ class EspecialistaConsultaHistoricoClientes(ListView):
         context['realizada'] = cita.realizada
 
         return context
+
+
+
+
+
+# desde aqui el especialista puede listar las citas del especialista en el dia corriente
+@method_decorator(especialista_required, name='dispatch')
+class EspecialistaConsultaCitasDelDia(ListView):
+    model = Cita
+    template_name = 'core/especialista_consulta_citas_del_dia.html'
+
+    # funcion que devuelve las citas que no han sido efectuados por el especialista
+    def get_queryset(self):
+        return Cita.objects.filter(realizada=0).filter(idEspecialista=self.request.user.id).filter(fecha=dateutil.utils.today())
 
 
 

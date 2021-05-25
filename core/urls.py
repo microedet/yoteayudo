@@ -70,5 +70,12 @@ urlpatterns = [
     path('especialista_consulta_citas_del_dia/', views.EspecialistaConsultaCitasDelDia.as_view(),
          name='especialista_consulta_citas_del_dia'),
 
+    #url para consultar mensajes recibidos
+    path('mensaje_list/', views.MensajeListView.as_view(),
+         name='mensaje_list'),
+
+    #url para hacer mensajes
+    path('enviar_mensaje/', views.MensajeUpdateView.as_view(),name='enviar_mensaje'),
+
 ]
 

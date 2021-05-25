@@ -5,12 +5,9 @@ from django.views.generic import CreateView, TemplateView, UpdateView, ListView,
 
 from core.decorators import especialista_required, cliente_required
 from core.forms import ClienteSignupForm, EspecialistaSignupForm, ClienteUpdateForm, EspecialistaUpdateForm, \
-    EspecialistaDeleteForm, CitaForm, CitaDetailHistorical, CitaFormModificaEspe
+    EspecialistaDeleteForm, CitaForm, CitaDetailHistorical, CitaFormModificaEspe, MensajeUpdateForm
 from django import forms
-from core.models import Cliente, Especialista, Cita
-
-
-
+from core.models import Cliente, Especialista, Cita, Mensaje
 
 # decoradores
 from django.utils.decorators import method_decorator
@@ -343,6 +340,40 @@ class EspecialistaConsultaCitasDelDia(ListView):
     # funcion que devuelve las citas que no han sido efectuados por el especialista
     def get_queryset(self):
         return Cita.objects.filter(realizada=0).filter(idEspecialista=self.request.user.id).filter(fecha=dateutil.utils.today())
+
+
+# vista para listado de mensajes recibidos
+@method_decorator(login_required, name='dispatch')
+class MensajeListView(ListView):
+    model = Mensaje
+    #template_name = 'core/mensaje_list.html'
+
+def get_queryset(self):
+        return Mensaje.objects.filter(leido=0).filter(idReceptor=self.request.user.id).order_by('-fecha')
+
+
+
+'''
+    # mediante esta funcion volvemos los valores que hay en la consulta para verlos
+    def get_context_data(self, **kwargs):
+        context = super(MensajeListView, self).get_context_data(**kwargs)
+        mensaje= Mensaje.objects.get(idReceptor=self.request.user.id)
+        context['id'] = mensaje.id
+        context['idEmisor'] = mensaje.idEmisor
+        context['idReceptor'] = mensaje.idReceptor
+        context['fecha'] = mensaje.fecha
+        context['texto'] = mensaje.texto
+        context['leido'] = mensaje.leido
+
+        return context
+'''
+
+#vista para crear mensaje y enviarlo
+@method_decorator(login_required, name='dispatch')
+class MensajeUpdateView(CreateView):
+    model = Mensaje
+    form_class = MensajeUpdateForm
+    success_url = reverse_lazy('index')
 
 
 

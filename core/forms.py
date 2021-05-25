@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from sqlalchemy.sql.functions import now
 
-from core.models import Usuario, Cliente, Especialista, Cita
+from core.models import Usuario, Cliente, Especialista, Cita, Mensaje
 
 
 class ClienteSignupForm(UserCreationForm):
@@ -138,3 +138,20 @@ class CitaDetailHistorical(forms.ModelForm):
             'realizada': forms.NullBooleanSelect(attrs={'class': 'form-control mt-3', 'placeholder': 'realizada'})
 
         }
+
+# formulario para mensajes
+class MensajeUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Mensaje
+        fields = ['idEmisor', 'idReceptor',  'asunto', 'texto','leido']
+
+        widgets = {
+            'idEmisor': forms.TextInput(attrs={'class': 'form-control mt-3', 'placeholder': 'idEmisor'}),
+            'idReceptor': forms.TextInput(attrs={'class': 'form-control mt-3', 'placeholder': 'idReceptor'}),
+            #'fecha': forms.DateField(attrs={'class': 'form-control mt-3', 'placeholder': 'DD/MM/AAAA'}),
+            'asunto': forms.TextInput(attrs={'class': 'form-control mt-3', 'placeholder': 'asunto'}),
+            'texto': forms.Textarea(attrs={'class': 'form-control mt-3', 'placeholder': 'texto'}),
+            'leido': forms.NullBooleanSelect(attrs={'class': 'form-control mt-3', 'placeholder': 'realizada'})
+
+        }
+

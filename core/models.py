@@ -84,8 +84,13 @@ class Mensaje(models.Model):
     class Meta:
         verbose_name = "mensaje"
         verbose_name_plural = 'mensajes'
-        # ordering = ['id']
+        ordering = ['fecha']
 
     def __str__(self):
         return str(self.idEmisor) + " " + str(self.idReceptor) + " " + self.asunto + " "
         + self.texto + " "
+
+#hilo para los mensajes
+class Thread(models.Model):
+    usuarios=models.ManyToManyField(Usuario,related_name='threads')
+    mensajes=models.ManyToManyField(Mensaje)

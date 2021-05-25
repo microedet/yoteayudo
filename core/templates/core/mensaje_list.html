@@ -1,0 +1,66 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}Perfil Cliente{% endblock %}
+{% block content %}
+    <style>label{display:none}</style>
+    <br>
+    <br>
+    <br>
+    <style>.errorlist{color:red;}</style>
+    <main role="main">
+        <div class="container">
+            <div class="row mt-3">
+                <div class="col-md-11 mx-auto mb-5">
+                    <br>
+                    <br><h2>Mensajes Recibidos</h2>
+                    <table class="table table-bordered">
+
+                        <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Emisor</th>
+                            <th scope="col">Foto del Emisor</th>
+                            <th  scope="col">Texto</th>
+                            <th  scope="col">Leido</th>
+                            <th  scope="col">Acciones</th>
+
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for mensaje in mensaje_list %}
+                            <tr style="vertical-align: middle">
+
+
+                                <td style="vertical-align: middle">{{ mensaje.fecha}}</td>
+                                {% if request.user.is_cliente %}
+                                <td style=" width: 100px;height: 120px"> {{ mensaje.idEmisor.ClienteidUsuario.nombre }} {{ mensaje.idEmisor.ClienteidUsuario.apellido }}</td>
+                                {% endif %}
+                                {% if request.user.is_especialista %}
+                                <td style=" width: 100px;height: 120px"> {{ mensaje.idEmisor.EspecialistaidUsuario.nombre }} {{ mensaje.idEmisor.EspecialistaidUsuario.apellido }}</td>
+                                {% endif %}
+                                {% if request.user.is_cliente %}
+                                <td> <img  id="foto_carnet" src="{{ mensaje.idEmisor.ClienteidUsuario.foto.url }}" style=" width: 100px;height: 120px"></td>
+                                {% endif %}
+                                {% if request.user.is_especialista %}
+                                <td> <img  id="foto_carnet" src="{{ mensaje.idEmisor.EspecialistaidUsuario.foto.url }}" style=" width: 100px;height: 120px"></td>
+                                {% endif %}
+                                <td style="vertical-align: middle">{{ mensaje.asunto}} </td>
+                                <td style="vertical-align: middle">{{ mensaje.leido}} </td>
+
+                                <td style="vertical-align: middle">
+                                        <a class="btn btn-default"  href=" " >Contestar Mensaje</a>
+                                        <a class="btn btn-default"  href=" ">Borrar  Mensaje </a>
+
+                                </td>
+
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+{% endblock %}

@@ -16,6 +16,8 @@
     <link rel="stylesheet" href="{% static 'core/plugins/slider/css/owl.carousel.min.css' %}">
     <link rel="stylesheet" href="{% static 'core/plugins/slider/css/owl.theme.default.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'core/css/style.css' %}">
+        <!--pongo la conexion para plugin select2-->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -48,8 +50,8 @@
                                     <a class="dropdown-item" href="{% url 'especialista_consulta_citas_del_dia'  %}">Consulta Citas para hoy</a>
                                     <a class="dropdown-item" href="{% url 'especialista_consulta_cliente'  %}">Especialista Consulta Clientes</a>
                             {% endif %}
-                                    <a class="dropdown-item" href="{% url 'especialista_consulta_cliente'  %}">Enviar mensaje</a>
-                                    <a class="dropdown-item" href="{% url 'especialista_consulta_cliente'  %}">Consultar mensaje</a>
+                                    <a class="dropdown-item" href="{% url 'enviar_mensaje'  %}">Enviar mensaje</a>
+                                    <a class="dropdown-item" href="{% url 'mensaje_list'  %}">Consultar mensaje</a>
 
                             <div>
                     </li>
@@ -143,6 +145,9 @@
 <script src="{% static 'core/plugins/scroll-fixed/jquery-scrolltofixed-min.js' %}"></script>
 <script src="{% static 'core/plugins/slider/js/owl.carousel.min.js' %}"></script>
 <script src="{% static 'core/js/script.js' %}"></script>
+
+<!-- plugin slect2 -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 
 </html>

@@ -5,7 +5,7 @@ from django.views.generic import CreateView, TemplateView, UpdateView, ListView,
 
 from core.decorators import especialista_required, cliente_required
 from core.forms import ClienteSignupForm, EspecialistaSignupForm, ClienteUpdateForm, EspecialistaUpdateForm, \
-    EspecialistaDeleteForm, CitaForm, CitaDetailHistorical, CitaFormModificaEspe, MensajeUpdateForm
+    EspecialistaDeleteForm, CitaForm, CitaDetailHistorical, CitaFormModificaEspe, MensajeCreateForm, MensajeUpdateForm
 from django import forms
 from core.models import Cliente, Especialista, Cita, Mensaje
 
@@ -349,8 +349,8 @@ class MensajeListView(ListView):
     #template_name = 'core/mensaje_list.html'
 
 def get_queryset(self):
-        return Mensaje.objects.filter(leido=0).filter(idReceptor=self.request.user.id).order_by('-fecha')
-
+        #return Mensaje.objects.filter(leido=0).filter(idReceptor=self.request.user).order_by('-fecha')
+        return Mensaje.objects.filter(leido=0,idReceptor=self.request.user).order_by('-fecha')
 
 
 '''
@@ -370,10 +370,35 @@ def get_queryset(self):
 
 #vista para crear mensaje y enviarlo
 @method_decorator(login_required, name='dispatch')
-class MensajeUpdateView(CreateView):
+class MensajeCreateView(CreateView):
     model = Mensaje
+    form_class = MensajeCreateForm
+    success_url = reverse_lazy('index')
+
+
+#vista para leer los mensajes y ponerlos como leidos
+@method_decorator(login_required, name='dispatch')
+class MensajeUpdateView(UpdateView):
+    model = Mensaje
+    template_name = 'core/mensaje_leer.html'
     form_class = MensajeUpdateForm
     success_url = reverse_lazy('index')
+
+    # mediante esta funcion tomamos el valor de la pk, metido en la url, para saber que mensaje se quiere leer
+    # y se comprueba que el idReceptor sea el que este logeado
+    def get_context_data(self, **kwargs):
+        context = super(MensajeUpdateView, self).get_context_data(**kwargs)
+        mensaje = Mensaje.objects.get(id=self.kwargs.get('pk'),idReceptor=self.request.user)
+        #cliente = Cliente.objects.get(idUsuario_id=self.request.user)
+        context['idReceptor'] = mensaje.idReceptor
+        context['idEmisor'] = mensaje.idEmisor
+        context['fecha'] = mensaje.fecha
+        context['asunto'] = mensaje.asunto
+        context['texto'] = mensaje.texto
+        context['leido'] = mensaje.leido
+
+        print(mensaje)
+        return context
 
 
 

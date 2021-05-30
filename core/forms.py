@@ -118,7 +118,7 @@ class CitaFormModificaEspe(forms.ModelForm):
             'idCliente': forms.TextInput(attrs={'class': 'form-control mt-3', 'placeholder': 'idCliente'}),
             'idEspecialista': forms.TextInput(attrs={'class': 'form-control mt-3', 'placeholder': 'idEspecialista'}),
             'informe': forms.TextInput(
-                attrs={'class': 'form-control mt-3', 'placeholder': 'informe', 'required': 'False' , 'value':' '}),
+                attrs={'class': 'form-control mt-3', 'placeholder': 'informe', 'required': 'False', 'value': ' '}),
             'realizada': forms.NullBooleanSelect(attrs={'class': 'form-control mt-3', 'placeholder': 'realizada'})
 
         }
@@ -139,19 +139,44 @@ class CitaDetailHistorical(forms.ModelForm):
 
         }
 
-# formulario para mensajes
-class MensajeUpdateForm(forms.ModelForm):
+
+# formulario para crear mensajes
+class MensajeCreateForm(forms.ModelForm):
     class Meta:
         model = Mensaje
-        fields = ['idEmisor', 'idReceptor',  'asunto', 'texto','leido']
+
+        fields = ['idEmisor', 'idReceptor', 'asunto', 'texto']
 
         widgets = {
-            'idEmisor': forms.TextInput(attrs={'class': 'form-control mt-3', 'placeholder': 'idEmisor'}),
-            'idReceptor': forms.TextInput(attrs={'class': 'form-control mt-3', 'placeholder': 'idReceptor'}),
-            #'fecha': forms.DateField(attrs={'class': 'form-control mt-3', 'placeholder': 'DD/MM/AAAA'}),
+            'idEmisor': forms.Select(attrs={'class': 'form-control mt-3', 'placeholder': 'idEmisor'}),
+            'idReceptor': forms.Select(attrs={'class': 'form-control mt-3', 'placeholder': 'idReceptor'}),
+            # 'fecha': forms.DateField(attrs={'class': 'form-control mt-3', 'placeholder': 'DD/MM/AAAA'}),
             'asunto': forms.TextInput(attrs={'class': 'form-control mt-3', 'placeholder': 'asunto'}),
             'texto': forms.Textarea(attrs={'class': 'form-control mt-3', 'placeholder': 'texto'}),
-            'leido': forms.NullBooleanSelect(attrs={'class': 'form-control mt-3', 'placeholder': 'realizada'})
+            #'leido': forms.NullBooleanSelect(attrs={'class': 'form-control mt-3', 'placeholder': 'realizada'})
 
         }
 
+# formulario para leer mensajes
+class MensajeUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Mensaje
+
+        fields = ['idEmisor', 'idReceptor','asunto','texto','leido']
+
+        widgets = {
+            '''
+            'idEmisor': forms.Select(attrs={'class': 'form-control mt-3', 'placeholder': 'idEmisor'}),
+            'idReceptor': forms.Select(attrs={'class': 'form-control mt-3', 'placeholder': 'idReceptor'}),
+            #'fecha': forms.DateInput(attrs={'class': 'form-control mt-3', 'placeholder': 'DD/MM/AAAA'}),
+            'asunto': forms.TextInput(attrs={'class': 'form-control mt-3', 'placeholder': 'asunto'}),
+            'texto': forms.Textarea(attrs={'class': 'form-control mt-3', 'placeholder': 'texto'}),
+            '''
+            'idEmisor': forms.TextInput(attrs={'readonly':'readonly'}),
+            'idReceptor': forms.Select(attrs={'readonly':'readonly'}),
+            #'fecha': forms.TextInput(attrs={'class': 'form-control mt-3', 'readonly':'readonly'}),
+            'asunto': forms.TextInput(attrs={'class': 'form-control mt-3', 'readonly':'readonly'}),
+            'texto': forms.Textarea(attrs={'class': 'form-control mt-3', 'readonly':'readonly'}),
+            'leido': forms.NullBooleanSelect(attrs={'class': 'form-control mt-3', 'placeholder': 'leido'})
+
+        }

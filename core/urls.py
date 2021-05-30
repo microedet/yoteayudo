@@ -75,7 +75,12 @@ urlpatterns = [
          name='mensaje_list'),
 
     #url para hacer mensajes
-    path('enviar_mensaje/', views.MensajeUpdateView.as_view(),name='enviar_mensaje'),
+    path('enviar_mensaje/', views.MensajeCreateView.as_view(),name='enviar_mensaje'),
+
+    path("select2/", include("django_select2.urls")),
+
+    #Url para leer meensaje y porerlo como leido
+    path('mensaje_leer/<int:pk>', views.MensajeUpdateView.as_view(), name='mensaje_leer'),
 
 ]
 

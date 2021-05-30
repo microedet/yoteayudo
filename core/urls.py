@@ -82,5 +82,8 @@ urlpatterns = [
     #Url para leer meensaje y porerlo como leido
     path('mensaje_leer/<int:pk>', views.MensajeUpdateView.as_view(), name='mensaje_leer'),
 
+    # Url para borrar meensaje
+    path('mensaje_borrar/<int:pk>', views.MensajeDeleteView.as_view(), name='mensaje_borrar'),
+
 ]
 

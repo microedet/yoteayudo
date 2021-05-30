@@ -47,15 +47,15 @@
                                 {% endif %}
                                 <td style="vertical-align: middle">{{ mensaje.asunto}} </td>
                                 {% if mensaje.leido == True %}
-                                    <td style="vertical-align: middle">  <i class="fas fa-thumbs-up"></i></td>
+                                    <td style="vertical-align: middle">  <i class="fas fa-thumbs-up" style="color: green"></i></td>
                                 {% else %}
-                                    <td style="vertical-align: middle"> <i class="fas fa-thumbs-down"></i></td>
+                                    <td style="vertical-align: middle"> <i class="fas fa-thumbs-down" style="color: red"></i></td>
 
                                 {% endif %}
 
                                 <td style="vertical-align: middle">
                                     <a class="btn btn-default"   href="{% url 'mensaje_leer' pk=mensaje.id %}">Leer Mensaje</a>
-                                    <a class="btn btn-default"  href=" ">Borrar  Mensaje </a>
+                                    <a class="btn btn-default"  href="{% url 'mensaje_borrar' pk=mensaje.id %}">Borrar  Mensaje </a>
 
                                 </td>
 

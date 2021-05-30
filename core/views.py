@@ -353,21 +353,6 @@ def get_queryset(self):
         return Mensaje.objects.filter(leido=0,idReceptor=self.request.user).order_by('-fecha')
 
 
-'''
-    # mediante esta funcion volvemos los valores que hay en la consulta para verlos
-    def get_context_data(self, **kwargs):
-        context = super(MensajeListView, self).get_context_data(**kwargs)
-        mensaje= Mensaje.objects.get(idReceptor=self.request.user.id)
-        context['id'] = mensaje.id
-        context['idEmisor'] = mensaje.idEmisor
-        context['idReceptor'] = mensaje.idReceptor
-        context['fecha'] = mensaje.fecha
-        context['texto'] = mensaje.texto
-        context['leido'] = mensaje.leido
-
-        return context
-'''
-
 #vista para crear mensaje y enviarlo
 @method_decorator(login_required, name='dispatch')
 class MensajeCreateView(CreateView):
@@ -382,7 +367,7 @@ class MensajeUpdateView(UpdateView):
     model = Mensaje
     template_name = 'core/mensaje_leer.html'
     form_class = MensajeUpdateForm
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('mensaje_list')
 
     # mediante esta funcion tomamos el valor de la pk, metido en la url, para saber que mensaje se quiere leer
     # y se comprueba que el idReceptor sea el que este logeado
@@ -399,6 +384,19 @@ class MensajeUpdateView(UpdateView):
 
         print(mensaje)
         return context
+
+
+#vista para borrar mensaje
+@method_decorator(login_required, name='dispatch')
+class MensajeDeleteView(DeleteView):
+    model = Mensaje
+    form_class = MensajeUpdateForm
+    success_url = reverse_lazy('mensaje_list')
+
+    #para comprobar que el mensaje es tiene como receptor a la persona logeada
+    def get_queryset(self):
+        return Mensaje.objects.filter(idReceptor=self.request.user.id)
+
 
 
 

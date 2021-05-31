@@ -1,6 +1,7 @@
 import dateutil.utils
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, Resolver404
 from django.views.generic import CreateView, TemplateView, UpdateView, ListView, DetailView, DeleteView
 
 from core.decorators import especialista_required, cliente_required
@@ -284,18 +285,23 @@ class EspecialistaEditaConsulta(UpdateView):
     # mediante esta funcion tomamos el valor de la pk, metido en la url, para saber que especialista
     # solicitamos la consulta
     def get_context_data(self, **kwargs):
-        context = super(EspecialistaEditaConsulta, self).get_context_data(**kwargs)
-        # especialista= Especialista.objects.get(idUsuario=self.model.idEspecialista)
-        # especialista = Especialista.objects.get(idUsuario_id=self.kwargs.get('pk'))
-        cita = Cita.objects.get(id=self.kwargs.get('pk'))
-        context['id'] = cita.id
-        context['fecha'] = cita.fecha
-        context['idEspecialista'] = cita.idEspecialista_id
-        context['idCliente'] = cita.idCliente_id
-        context['informe'] = cita.informe
-        context['realizada'] = cita.realizada
 
-        return context
+        try:
+            context = super(EspecialistaEditaConsulta, self).get_context_data(**kwargs)
+            # especialista= Especialista.objects.get(idUsuario=self.model.idEspecialista)
+            #especialista = Especialista.objects.get(idUsuario_id=self.kwargs.get('pk'))
+            cita = Cita.objects.get(id=self.kwargs.get('pk'),idEspecialista_id=self.request.user.id)
+            context['id'] = cita.id
+            context['fecha'] = cita.fecha
+            context['idEspecialista'] = cita.idEspecialista_id
+            context['idCliente'] = cita.idCliente_id
+            context['informe'] = cita.informe
+            context['realizada'] = cita.realizada
+            return context
+
+
+        except ObjectDoesNotExist:
+            print("Error no puedes ver una consulta que no es tuya ")
 
 
 # desde aqui el especialista puede listar los historicos de un cliene los clientes que tienen cita con el
@@ -307,9 +313,10 @@ class EspecialistaConsultaHistoricoClientes(ListView):
     # funcion que devuelve las citas que no han sido efectuados por el especialista
     def get_queryset(self,**kwargs):
         # return Cita.objects.filter(realizada=1).filter(idEspecialista=self.request.user.id)
-        
-        return Cita.objects.filter(realizada=1).filter(idCliente=self.kwargs.get('pk')).filter(idEspecialista=self.request.user.id).order_by('-fecha')
-
+        try:
+            return Cita.objects.filter(realizada=1).filter(idCliente=self.kwargs.get('pk')).filter(idEspecialista=self.request.user.id).order_by('-fecha')
+        except ObjectDoesNotExist:
+            print("No es una consulta suya")
 
 
     # mediante esta funcion tomamos el valor de la pk, metido en la url, para saber que especialista
@@ -348,9 +355,12 @@ class MensajeListView(ListView):
     model = Mensaje
     #template_name = 'core/mensaje_list.html'
 
-def get_queryset(self):
-        #return Mensaje.objects.filter(leido=0).filter(idReceptor=self.request.user).order_by('-fecha')
-        return Mensaje.objects.filter(leido=0,idReceptor=self.request.user).order_by('-fecha')
+    def get_queryset(self):
+        return Mensaje.objects.filter(idReceptor=self.request.user.id)
+        #return Mensaje.objects.get(leido=1,idReceptor=self.request.user.id).order_by('-fecha')
+        #return Mensaje.objects.filter(leido=0,idReceptor=self.request.user).order_by('-fecha')
+        print("el idReceptor loqueado es " + Mensaje.idReceptor)
+
 
 
 #vista para crear mensaje y enviarlo
@@ -372,18 +382,24 @@ class MensajeUpdateView(UpdateView):
     # mediante esta funcion tomamos el valor de la pk, metido en la url, para saber que mensaje se quiere leer
     # y se comprueba que el idReceptor sea el que este logeado
     def get_context_data(self, **kwargs):
-        context = super(MensajeUpdateView, self).get_context_data(**kwargs)
-        mensaje = Mensaje.objects.get(id=self.kwargs.get('pk'),idReceptor=self.request.user)
-        #cliente = Cliente.objects.get(idUsuario_id=self.request.user)
-        context['idReceptor'] = mensaje.idReceptor
-        context['idEmisor'] = mensaje.idEmisor
-        context['fecha'] = mensaje.fecha
-        context['asunto'] = mensaje.asunto
-        context['texto'] = mensaje.texto
-        context['leido'] = mensaje.leido
+        try:
+            context = super(MensajeUpdateView, self).get_context_data(**kwargs)
+            mensaje = Mensaje.objects.get(id=self.kwargs.get('pk'),idReceptor=self.request.user)
+            #cliente = Cliente.objects.get(idUsuario_id=self.request.user)
+            context['idReceptor'] = mensaje.idReceptor
+            context['idEmisor'] = mensaje.idEmisor
+            context['fecha'] = mensaje.fecha
+            context['asunto'] = mensaje.asunto
+            context['texto'] = mensaje.texto
+            context['leido'] = mensaje.leido
+            return  context
+        except ObjectDoesNotExist:
+            print("Either the blog or entry doesn't exist.")
+            template_name = 'core/index.html'
+        except:
+          return render('core/404.html')
 
-        print(mensaje)
-        return context
+
 
 
 #vista para borrar mensaje
@@ -395,9 +411,27 @@ class MensajeDeleteView(DeleteView):
 
     #para comprobar que el mensaje es tiene como receptor a la persona logeada
     def get_queryset(self):
-        return Mensaje.objects.filter(idReceptor=self.request.user.id)
+        try:
+         return Mensaje.objects.filter(idReceptor=self.request.user.id)
+        except ObjectDoesNotExist:
+            print("ERROR ESE MENSAJE NO ES SUYO NO LO PUEDE BORAR")
+
+##VISTAS PARA ERRORES
+#404: página no encontrada
+def render_to_response(param):
+    pass
 
 
+def pag_404_not_found(request, exception, template_name="error/404.html"):
+    response = render_to_response("core/404.html")
+    response.status_code=404
+    return response
 
+
+#500: error en el servidor
+def pag_500_error_server(request, exception,template_name="error/500.html"):
+    response = render_to_response("core/500.html")
+    response.status_code=500
+    return response
 
 

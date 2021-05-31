@@ -85,15 +85,13 @@ class EspecialistaDeleteForm(forms.ModelForm):
 class CitaForm(forms.ModelForm):
     class Meta:
         model = Cita
-        # fields = ['fecha','idCliente','idEspecialista','informe','realizada']
         fields = ['fecha', 'idCliente', 'idEspecialista']
 
         widgets = {
             'fecha': forms.DateInput(attrs={'class': 'form-control mt-3', 'placeholder': 'DD/MM/AAAA'}),
             'idCliente': forms.TextInput(attrs={'class': 'form-control mt-3', 'placeholder': 'idCliente'}),
             'idEspecialista': forms.TextInput(attrs={'class': 'form-control mt-3', 'placeholder': 'idEspecialista'}),
-            # 'informe':forms.TextInput(attrs={'class':'form-control mt-3', 'placeholder':'informe'}),
-            # 'realizada':forms.NullBooleanSelect(attrs={'class':'form-control mt-3', 'placeholder':'realizada'})
+
 
         }
 
@@ -111,7 +109,6 @@ class CitaFormModificaEspe(forms.ModelForm):
         model = Cita
         fields = ['fecha', 'idCliente', 'idEspecialista', 'informe', 'realizada']
         informe = forms.CharField(required=False)
-        # fields = ['fecha','idCliente','idEspecialista'
 
         widgets = {
             'fecha': forms.DateInput(attrs={'class': 'form-control mt-3', 'placeholder': 'DD/MM/AAAA'}),
@@ -146,14 +143,15 @@ class MensajeCreateForm(forms.ModelForm):
         model = Mensaje
 
         fields = ['idEmisor', 'idReceptor', 'asunto', 'texto']
+        idEmisor = forms.ModelChoiceField(queryset= Cliente.objects.order_by('nombre'))
+        idReceptor = forms.ModelChoiceField(queryset= Especialista.objects.none())
+
 
         widgets = {
             'idEmisor': forms.Select(attrs={'class': 'form-control mt-3', 'placeholder': 'idEmisor'}),
             'idReceptor': forms.Select(attrs={'class': 'form-control mt-3', 'placeholder': 'idReceptor'}),
-            # 'fecha': forms.DateField(attrs={'class': 'form-control mt-3', 'placeholder': 'DD/MM/AAAA'}),
             'asunto': forms.TextInput(attrs={'class': 'form-control mt-3', 'placeholder': 'asunto'}),
             'texto': forms.Textarea(attrs={'class': 'form-control mt-3', 'placeholder': 'texto'}),
-            #'leido': forms.NullBooleanSelect(attrs={'class': 'form-control mt-3', 'placeholder': 'realizada'})
 
         }
 
@@ -165,16 +163,9 @@ class MensajeUpdateForm(forms.ModelForm):
         fields = ['idEmisor', 'idReceptor','asunto','texto','leido']
 
         widgets = {
-            '''
-            'idEmisor': forms.Select(attrs={'class': 'form-control mt-3', 'placeholder': 'idEmisor'}),
-            'idReceptor': forms.Select(attrs={'class': 'form-control mt-3', 'placeholder': 'idReceptor'}),
-            #'fecha': forms.DateInput(attrs={'class': 'form-control mt-3', 'placeholder': 'DD/MM/AAAA'}),
-            'asunto': forms.TextInput(attrs={'class': 'form-control mt-3', 'placeholder': 'asunto'}),
-            'texto': forms.Textarea(attrs={'class': 'form-control mt-3', 'placeholder': 'texto'}),
-            '''
+
             'idEmisor': forms.TextInput(attrs={'readonly':'readonly'}),
             'idReceptor': forms.Select(attrs={'readonly':'readonly'}),
-            #'fecha': forms.TextInput(attrs={'class': 'form-control mt-3', 'readonly':'readonly'}),
             'asunto': forms.TextInput(attrs={'class': 'form-control mt-3', 'readonly':'readonly'}),
             'texto': forms.Textarea(attrs={'class': 'form-control mt-3', 'readonly':'readonly'}),
             'leido': forms.NullBooleanSelect(attrs={'class': 'form-control mt-3', 'placeholder': 'leido'})

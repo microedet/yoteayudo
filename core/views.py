@@ -8,7 +8,7 @@ from core.decorators import especialista_required, cliente_required
 from core.forms import ClienteSignupForm, EspecialistaSignupForm, ClienteUpdateForm, EspecialistaUpdateForm, \
     EspecialistaDeleteForm, CitaForm, CitaDetailHistorical, CitaFormModificaEspe, MensajeCreateForm, MensajeUpdateForm
 from django import forms
-from core.models import Cliente, Especialista, Cita, Mensaje
+from core.models import Cliente, Especialista, Cita, Mensaje, Usuario
 
 # decoradores
 from django.utils.decorators import method_decorator
@@ -370,6 +370,13 @@ class MensajeCreateView(CreateView):
     form_class = MensajeCreateForm
     success_url = reverse_lazy('index')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['especialistas'] = Especialista.objects.order_by('nombre')
+        return  context
+
+
 
 #vista para leer los mensajes y ponerlos como leidos
 @method_decorator(login_required, name='dispatch')
@@ -394,8 +401,7 @@ class MensajeUpdateView(UpdateView):
             context['leido'] = mensaje.leido
             return  context
         except ObjectDoesNotExist:
-            print("Either the blog or entry doesn't exist.")
-            template_name = 'core/index.html'
+            print("No tiene derecho a ver la información.")
         except:
           return render('core/404.html')
 

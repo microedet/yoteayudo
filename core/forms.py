@@ -2,7 +2,6 @@ from datetime import datetime, date
 
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from sqlalchemy.sql.functions import now
 
 from core.models import Usuario, Cliente, Especialista, Cita, Mensaje
 
@@ -143,11 +142,12 @@ class MensajeCreateForm(forms.ModelForm):
         model = Mensaje
 
         fields = ['idEmisor', 'idReceptor', 'asunto', 'texto']
-        idEmisor = forms.ModelChoiceField(queryset= Cliente.objects.order_by('nombre'))
-        idReceptor = forms.ModelChoiceField(queryset= Especialista.objects.none())
+        #idReceptor = forms.ModelChoiceField.filter(queryset= Usuario.objects.get(is_especialista=True))
+        #especialista = forms.ModelChoiceField(queryset= Especialista.objects.order_by('nombre','apellido'))
 
 
         widgets = {
+            'especialista':forms.Select(attrs={'class': 'form-control mt-3', 'placeholder': 'especialista'}),
             'idEmisor': forms.Select(attrs={'class': 'form-control mt-3', 'placeholder': 'idEmisor'}),
             'idReceptor': forms.Select(attrs={'class': 'form-control mt-3', 'placeholder': 'idReceptor'}),
             'asunto': forms.TextInput(attrs={'class': 'form-control mt-3', 'placeholder': 'asunto'}),

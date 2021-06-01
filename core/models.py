@@ -9,13 +9,22 @@ class Usuario(AbstractUser):
     is_cliente = models.BooleanField(default=False)
     is_especialista = models.BooleanField(default=False)
 
+
     class Meta:
         verbose_name = "Usuario"
         verbose_name_plural = 'Usuarios'
         ordering = ['id']
 
     def __str__(self):
-        return str(self.id) + " " + self.username
+        #cliente = Cliente.objects.filter(idUsuario__is_cliente=True)
+
+        #if (self.is_cliente==True):
+            return str(self.id) + " " + str(self.username)+" "
+
+        #else:
+            #return str(self.id)
+
+
 
 
 class Cliente(models.Model):

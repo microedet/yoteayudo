@@ -2,9 +2,7 @@
 {% load static %}
 {% block title %}Enviar Mensaje{% endblock %}
 {% block content %}
-    <script>
-        $(document).ready(function() { $("#idReceptor").select2(); });
-    </script>
+
     <style>label{display:none}</style>
     <br>
     <br>
@@ -18,18 +16,17 @@
                     <br>
                     <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
                         <h3 class="mb-4">Enviar Mensaje</h3>
-                        <p>Emisor :   {{ user }} </p>
+                        <p>Emisor : </p>
                         <input type="hidden"  value = {{ user }} name='idEmisor' >
                         <p>Receptor :</p>
-                    {{ especialista.nombre }}
-                        <select class="col-md-9 mx-auto mb-5 js-example-basic-multiple" name="idReceptor" id="idReceptor">
-                            <option value="0">seleccione un Receptor</option>
-                            {% for especialista in especialistas %}
-                                <option value="{{ especialista.id}}">{{ especialista.id }}</option>
+                            <select name="idReceptor">
 
-                            {% endfor %}
-                        </select>
-                    {{mensaje.idReceptor.ClienteidUsuario.nombre}}
+                                {% for especialista in especialistas %}
+                                <option value=" "> {{ especialista.nombre }} {{ especialista.apellido }}</option>
+                                {% endfor %}
+
+                            </select>
+
                         <p>Asunto :</p>
                         {{ form.asunto }}
                         <p>Texto :</p>
@@ -41,11 +38,9 @@
                     <!--SCRIP DE SELECT2-->
                     <script>
                         // In your Javascript (external .js resource or <script> tag)
-                        $(document).ready(function() {
-                            $('#idReceptor').select2();
-                        });
+                        $('.select_field_class').select2( { placeholder: "Select here", maximumSelectionSize: 100  } );
 
-                </script>
+                    </script>
 
 
 

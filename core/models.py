@@ -19,7 +19,7 @@ class Usuario(AbstractUser):
         #cliente = Cliente.objects.filter(idUsuario__is_cliente=True)
 
         #if (self.is_cliente==True):
-            return str(self.id) + " " + str(self.username)+" "
+            return str(self.id) + " "
 
         #else:
             #return str(self.id)

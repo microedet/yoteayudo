@@ -19,13 +19,24 @@
 
                         <input type="hidden"  value = {{ user }} name='idEmisor' >
                         <p>Receptor :</p>
+
+                         {% if request.user.is_cliente %}
                             <select class="form-control mt-3"  id="idReceptor" name="idReceptor">
                                 <option value ="">Seleccionar un  especialista</option>
                                 {% for especialista in especialistas %}
                                 <option value="{{ especialista.idUsuario }}" > {{ especialista.nombre }} {{ especialista.apellido }}</option>
                                 {% endfor %}
-
                             </select>
+                         {% endif %}
+
+                        {% if request.user.is_especialista %}
+                            <select class="form-control mt-3"  id="idReceptor" name="idReceptor">
+                                <option value ="">Seleccionar un  cliente</option>
+                                {% for cliente in clientes %}
+                                <option value="{{ cliente.idUsuario }}" > {{ cliente.nombre }} {{ cliente.apellido }}</option>
+                                {% endfor %}
+                            </select>
+                         {% endif %}
 
                         <p>Asunto :</p>
                         {{ form.asunto }}

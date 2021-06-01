@@ -6,31 +6,32 @@
     <br>
     <br>
     <br>
-<style>.errorlist{color:red;}</style>
-<main role="main">
-  <div class="container">
-    <div class="row mt-3">
-      <div class="col-md-9 mx-auto mb-5">
-          <br>
-          <br>
-        <div>
-            <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
-          <h3 class="mb-4">Borrar Mensaje</h3>
-                <p>¿Estás seguro de que quieres borrar el mensaje ?</p>
-                <p><b>Fecha : </b> {{ object.fecha }} </p>
-                 {% if object.idEmisor.is_cliente  %}
-                            <p><b>Emisor :</b>   {{ object.idEmisor.ClienteidUsuario.nombre }} {{ object.idEmisor.ClienteidUsuario.apellido }} </p>
-                        {% else  %}
-                            <p><b>Emisor :</b>    {{ object.idEmisor.ClienteidUsuario.nombre }} {{ object.idEmisor.ClienteidUsuario.apellido }} </p>
-                        {% endif  %}
-                <p><b>Asunto :</b> {{ object.asunto }}</p>
+    <style>.errorlist{color:red;}</style>
+    <main role="main">
+        <div class="container">
+            <div class="row mt-3">
+                <div class="col-md-9 mx-auto mb-5">
+                    <br>
+                    <br>
+                    <div>
+                        <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+                            <h3 class="mb-4">Borrar Mensaje</h3>
+                            <p>¿Estás seguro de que quieres borrar el mensaje ?</p>
+                            <p><b>Fecha : </b> {{ object.fecha }} </p>
+                            {% if object.idEmisor.is_cliente  %}
+                                <p><b>Emisor :</b>   {{ object.idEmisor.ClienteidUsuario.nombre }} {{ object.idEmisor.ClienteidUsuario.apellido }} </p>
+                            {% endif %}
+                            {% if object.idEmisor.is_especialista  %}
+                                <p><b>Emisor :</b>    {{ object.idEmisor.EspecialistaidUsuario.nombre }} {{ object.idEmisor.EspecialistaidUsuario.apellido }} </p>
+                            {% endif  %}
+                            <p><b>Asunto :</b> {{ object.asunto }}</p>
 
-          <p><input type="submit" class="btn btn-primary btn-block" value="Sí, Borrar el Mensaje"></p>
-        </form>
+                            <p><input type="submit" class="btn btn-primary btn-block" value="Sí, Borrar el Mensaje"></p>
+                        </form>
 
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </div>
-</main>
+    </main>
 {% endblock %}

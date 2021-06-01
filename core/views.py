@@ -374,6 +374,7 @@ class MensajeCreateView(CreateView):
         context = super().get_context_data(**kwargs)
 
         context['especialistas'] = Especialista.objects.order_by('nombre')
+        context['clientes'] = Cliente.objects.order_by('nombre')
         return  context
 
 

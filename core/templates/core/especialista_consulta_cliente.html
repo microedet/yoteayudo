@@ -10,7 +10,7 @@
     <main role="main">
         <div class="container">
             <div class="row mt-3">
-                <div class="col-md-9 mx-auto mb-5">
+                <div class="col-md-11 mx-auto mb-5">
                     <br>
                     <br><h2>Listado Clientes</h2>
                     <table class="table table-bordered">
@@ -43,7 +43,7 @@
                                     {% else %}
                                         <a class="btn btn-default" href="{% url 'especialista_edita_consulta' pk=cita.id %}" >Detalles Consulta</a>
                                         <a class="btn btn-default" href="{% url 'especialista_consulta_historico_cliente' pk=cita.idCliente_id %}" >Consultar Historico</a>
-
+                                        <a class="btn btn-default" href="{% url 'especialista_cambia_fecha_consulta' pk=cita.id %}" >Aplazar consulta</a>
 
                                     {% endif %}
                                 </td>

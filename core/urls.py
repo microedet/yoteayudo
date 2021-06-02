@@ -62,6 +62,10 @@ urlpatterns = [
     path('especialista_edita_consulta/<int:pk>', views.EspecialistaEditaConsulta.as_view(),
          name='especialista_edita_consulta'),
 
+    # url para que el especialista cambie la fecha de consulta no realizada
+    path('especialista_cambia_fecha_consulta/<int:pk>', views.EspecialistaAplazaConsulta.as_view(),
+         name='especialista_cambia_fecha_consulta'),
+
     # url para que el especialista vea el historial de cada cliente
     path('especialista_consulta_historico_cliente/<int:pk>', views.EspecialistaConsultaHistoricoClientes.as_view(),
          name='especialista_consulta_historico_cliente'),

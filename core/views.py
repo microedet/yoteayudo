@@ -304,6 +304,35 @@ class EspecialistaEditaConsulta(UpdateView):
             print("Error no puedes ver una consulta que no es tuya ")
 
 
+# desde aqui el especialista tiene acceso a una cita pedida por el cliente y le cambia la fecha
+@method_decorator(especialista_required, name='dispatch')
+class EspecialistaAplazaConsulta(UpdateView):
+    model = Cita
+    form_class = CitaFormModificaEspe
+    success_url = reverse_lazy('especialista_consulta_cliente')
+    template_name = 'core/especialista_aplaza_consulta.html'
+
+    # mediante esta funcion tomamos el valor de la pk, metido en la url, para saber que especialista
+    # solicitamos la consulta
+    def get_context_data(self, **kwargs):
+
+        try:
+            context = super(EspecialistaAplazaConsulta, self).get_context_data(**kwargs)
+
+            cita = Cita.objects.get(id=self.kwargs.get('pk'),idEspecialista_id=self.request.user.id)
+            context['id'] = cita.id
+            context['fecha'] = cita.fecha
+            context['idEspecialista'] = cita.idEspecialista_id
+            context['idCliente'] = cita.idCliente_id
+            context['informe'] = cita.informe
+            context['realizada'] = cita.realizada
+            return context
+
+
+        except ObjectDoesNotExist:
+            print("Error no puedes ver una consulta que no es tuya ")
+
+
 # desde aqui el especialista puede listar los historicos de un cliene los clientes que tienen cita con el
 @method_decorator(especialista_required, name='dispatch')
 class EspecialistaConsultaHistoricoClientes(ListView):
@@ -410,10 +439,6 @@ class MensajeUpdateView(UpdateView):
     #para guardar los datos
 
 
-
-
-
-
 #vista para borrar mensaje
 @method_decorator(login_required, name='dispatch')
 class MensajeDeleteView(DeleteView):
@@ -427,6 +452,8 @@ class MensajeDeleteView(DeleteView):
          return Mensaje.objects.filter(idReceptor=self.request.user.id)
         except ObjectDoesNotExist:
             print("ERROR ESE MENSAJE NO ES SUYO NO LO PUEDE BORAR")
+
+
 
 ##VISTAS PARA ERRORES
 #404: página no encontrada

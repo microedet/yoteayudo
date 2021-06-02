@@ -6,25 +6,25 @@
     <br>
     <br>
     <br>
-<style>.errorlist{color:red;}</style>
-<main role="main">
-  <div class="container">
-    <div class="row mt-3">
-      <div class="col-md-9 mx-auto mb-5">
-          <br>
-          <br>
-        <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
-          <h3 class="mb-4">Detalle de la cita</h3>
-            <p>Fecha de la Cita:  {{ form.fecha }} </p>
-            <p>Informe:</p>{{ form.informe }}
-            <p>Consulta Realizada:</p>{{ form.realizada }}
-             <input type="hidden"  value = {{ idCliente }} name='idCliente' >
-            <input type="hidden"  value = {{ idEspecialista }} name='idEspecialista' >
+    <style>.errorlist{color:red;}</style>
+    <main role="main">
+        <div class="container">
+            <div class="row mt-3">
+                <div class="col-md-9 mx-auto mb-5">
+                    <br>
+                    <br>
+                    <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+                        <h3 class="mb-4">Detalle de la cita</h3>
+                        <p>Fecha de la Cita:  {{ form.fecha }} </p>
+                        <p>Informe:</p>{{ form.informe }}
+                        <input type="hidden"  value = {{ idCliente }} name='idCliente' >
+                        <input type="hidden"  value = {{ idEspecialista }} name='idEspecialista' >
+                        <p>Consulta Realizada:</p>{{ form.realizada }}
 
-          <p><input type="submit" class="btn btn-primary btn-block" value="Actualizar"></p>
-        </form>
-      </div>
-    </div>
-  </div>
-</main>
+                        <p><input type="submit" class="btn btn-primary btn-block" value="Actualizar"></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
 {% endblock %}

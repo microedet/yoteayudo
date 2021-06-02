@@ -407,6 +407,11 @@ class MensajeUpdateView(UpdateView):
           return render('core/404.html')
 
 
+    #para guardar los datos
+
+
+
+
 
 
 #vista para borrar mensaje

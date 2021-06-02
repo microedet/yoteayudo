@@ -23,8 +23,9 @@
                         {{ form.fecha }}
                         {% if object.idEmisor.is_cliente  %}
                             <p><b>Emisor :</b>   {{ object.idEmisor.ClienteidUsuario.nombre }} {{ object.idEmisor.ClienteidUsuario.apellido }} </p>
-                        {% else  %}
-                            <p><b>Emisor :</b>    {{ object.idEmisor.ClienteidUsuario.nombre }} {{ object.idEmisor.ClienteidUsuario.apellido }} </p>
+                        {% endif %}
+                         {% if object.idEmisor.is_especialista  %}
+                            <p><b>Emisor :</b>    {{ object.idEmisor.EspecialistaidUsuario.nombre }} {{ object.idEmisor.EspecialistaidUsuario.apellido }} </p>
                         {% endif  %}
 
                         <p><b>Asunto :</b>  </p>

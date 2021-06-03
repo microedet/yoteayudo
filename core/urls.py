@@ -89,5 +89,8 @@ urlpatterns = [
     # Url para borrar meensaje
     path('mensaje_borrar/<int:pk>', views.MensajeDeleteView.as_view(), name='mensaje_borrar'),
 
+    #url para generar pdf
+    path('generar_pdf/', views.GeneralPdfClientes.as_view(), name='generar_pdf'),
+
 ]
 

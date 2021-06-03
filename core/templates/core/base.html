@@ -42,11 +42,12 @@
                                     <a class="dropdown-item" href="{% url 'especialistas' %}">Consultar Especialistas</a>
                                     <a class="dropdown-item" href="{% url 'modificar_consultar_cita_cliente' %}">Modificar y Anular Cita</a>
                                     <a class="dropdown-item" href="{% url 'historico_consulta_cliente' %}">Historial de Citas</a>
+                                    <a class="dropdown-item" href="{% url 'generar_pdf'  %}">Informe de Consultas</a>
+
                             {% endif %}
                             {% if request.user.is_especialista %}
                                     <a class="dropdown-item" href="{% url 'especialista_consulta_citas_del_dia'  %}">Consulta Citas para hoy</a>
                                     <a class="dropdown-item" href="{% url 'especialista_consulta_cliente'  %}">Especialista Consulta Clientes</a>
-                                    <a class="dropdown-item" href="{% url 'generar_pdf'  %}">Informe Clientes</a>
 
                             {% endif %}
                                     <a class="dropdown-item" href="{% url 'enviar_mensaje'  %}">Enviar mensaje</a>

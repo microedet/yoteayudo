@@ -4,6 +4,9 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.urls import reverse_lazy, Resolver404
 from django.views.generic import CreateView, TemplateView, UpdateView, ListView, DetailView, DeleteView
+from reportlab.lib import colors
+from reportlab.lib.units import cm
+from reportlab.platypus import TableStyle, Table
 
 from core.decorators import especialista_required, cliente_required
 from core.forms import ClienteSignupForm, EspecialistaSignupForm, ClienteUpdateForm, EspecialistaUpdateForm, \
@@ -484,14 +487,41 @@ def pag_500_error_server(request, exception,template_name="error/500.html"):
 
 
 #vista para general informe de clientes
-@method_decorator(especialista_required,name='dispatch')
+@method_decorator(cliente_required,name='dispatch')
 class GeneralPdfClientes(View):
 
     def cabecera(self, pdf):
         # Utilizamos el archivo logo_django.png que está guardado en la carpeta media/imagenes
-        archivo_imagen = settings.MEDIA_ROOT + '/core/platanera.png'
+        archivo_imagen = settings.MEDIA_ROOT + '/core/logoyoteayudo.png'
         # Definimos el tamaño de la imagen a cargar y las coordenadas correspondientes
         pdf.drawImage(archivo_imagen, 40, 750, 120, 90, preserveAspectRatio=True)
+        # Establecemos el tamaño de letra en 16 y el tipo de letra Helvetica
+        pdf.setFont("Helvetica-Bold", 16)
+        # Dibujamos una cadena en la ubicación X,Y especificada
+        pdf.drawString(230, 785, u"CLINICA YO TE AYUDO")
+        pdf.setFont("Helvetica-Bold", 14)
+        pdf.drawString(238, 765, u"INFORME DE CLIENTE")
+
+    def cliente(self,pdf):
+
+        # Establecemos el tamaño de letra en 16 y el tipo de letra Helvetica
+        pdf.setFont("Helvetica-Bold", 12)
+        # Dibujamos una cadena en la ubicación X,Y especificada
+        pdf.drawString(50, 700, u"CLIENTE")
+        pdf.setFont("Helvetica", 12)
+        pdf.drawString(70, 680, u"DNI:")
+        pdf.drawString(70, 660, u"Nombre:")
+        pdf.drawString(70, 640, u"Apellido:")
+        pdf.drawString(70, 620, u"Fecha Nacimiento:")
+        #datos cliente en negrita
+        pdf.setFont("Helvetica-Bold", 12)
+        cliente=Cliente.objects.get(idUsuario=self.request.user.id)
+        pdf.drawString(120,680, cliente.dni)
+        pdf.drawString(120,660, cliente.nombre)
+        pdf.drawString(120,640, cliente.apellido)
+        pdf.drawString(180,620, str(cliente.fechaNacimiento))
+
+
 
     def get(self, request, *args, **kwargs):
         # Indicamos el tipo de contenido a devolver, en este caso un pdf
@@ -502,6 +532,56 @@ class GeneralPdfClientes(View):
         pdf = canvas.Canvas(buffer)
         # Llamo al método cabecera donde están definidos los datos que aparecen en la cabecera del reporte.
         self.cabecera(pdf)
+        # Con show page hacemos un corte de página para pasar a la siguiente
+        pdf.showPage()
+        pdf.save()
+        pdf = buffer.getvalue()
+        buffer.close()
+        response.write(pdf)
+        return response
+
+    def tabla(self, pdf, y):
+        # Creamos una tupla de encabezados para neustra tabla
+        encabezados = ('Fecha', 'Especialista','Informe')
+        # Creamos una lista de tuplas que van a contener a las personas
+        detalles = [(cita.fecha, cita.idEspecialista.nombre +" "+ cita.idEspecialista.apellido , cita.informe) for cita in
+                    Cita.objects.all()]
+        # Establecemos el tamaño de cada una de las columnas de la tabla
+        detalle_orden = Table([encabezados] + detalles, colWidths=[2.5 * cm, 4 * cm, 11 * cm])
+
+
+        # Aplicamos estilos a las celdas de la tabla
+        detalle_orden.setStyle(TableStyle(
+            [
+                # La primera fila(encabezados) va a estar centrada
+                ('ALIGN', (0, 0), (3, 0), 'CENTER'),
+                # Los bordes de todas las celdas serán de color negro y con un grosor de 1
+                ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                # El tamaño de las letras de cada una de las celdas será de 10
+                ('FONTSIZE', (0, 0), (-1, -1), 10),
+            ]
+        ))
+        # Establecemos el tamaño de la hoja que ocupará la tabla
+        detalle_orden.wrapOn(pdf, 800, 600)
+        # Definimos la coordenada donde se dibujará la tabla
+        detalle_orden.drawOn(pdf, 60, y)
+
+    def get(self, request, *args, **kwargs):
+        # Indicamos el tipo de contenido a devolver, en este caso un pdf
+        response = HttpResponse(content_type='application/pdf')
+        # La clase io.BytesIO permite tratar un array de bytes como un fichero binario, se utiliza como almacenamiento temporal
+        buffer = BytesIO()
+        # Canvas nos permite hacer el reporte con coordenadas X y Y
+        pdf = canvas.Canvas(buffer)
+        # Llamo al método cabecera donde están definidos los datos que aparecen en la cabecera del reporte.
+        self.cabecera(pdf)
+        # Llamo al método CLiente
+        self.cliente(pdf)
+
+
+
+        y = 500
+        self.tabla(pdf, y)
         # Con show page hacemos un corte de página para pasar a la siguiente
         pdf.showPage()
         pdf.save()

@@ -1,3 +1,5 @@
+from sqlite3 import Date
+
 import dateutil.utils
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
@@ -10,7 +12,9 @@ from reportlab.platypus import TableStyle, Table
 
 from core.decorators import especialista_required, cliente_required
 from core.forms import ClienteSignupForm, EspecialistaSignupForm, ClienteUpdateForm, EspecialistaUpdateForm, \
-    EspecialistaDeleteForm, CitaForm, CitaDetailHistorical, CitaFormModificaEspe, MensajeCreateForm, MensajeUpdateForm
+    EspecialistaDeleteForm, CitaForm, CitaDetailHistorical, CitaFormModificaEspe, MensajeCreateForm, MensajeUpdateForm, \
+    FiltradoConsultaFechas
+
 from django import forms
 from core.models import Cliente, Especialista, Cita, Mensaje, Usuario
 
@@ -18,7 +22,6 @@ from core.models import Cliente, Especialista, Cita, Mensaje, Usuario
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
-
 
 # para cread pdf
 
@@ -206,6 +209,7 @@ class CitasListHistorical(ListView):
     model = Cita
     template_name = 'core/cita_list_historical.html'
     ordering = ['-fecha']
+
     # funcion que devuelve las citas que han sido efectuados por el especialista y son del cliente
     def get_queryset(self):
         return Cita.objects.filter(realizada=1).filter(idCliente=self.request.user.id).order_by('-fecha')
@@ -249,10 +253,10 @@ class CitaUpdateView(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(CitaUpdateView, self).get_context_data(**kwargs)
 
-        #al hacer el filtrado por id con la pk y idcliente resulta que si no corresponde a idCLiente logeado da error
-        cita = Cita.objects.get(id=self.kwargs.get('pk'),idCliente=self.request.user.id)
-        #if cita.DoesNotExist:
-            #template_name = 'core/index.html'
+        # al hacer el filtrado por id con la pk y idcliente resulta que si no corresponde a idCLiente logeado da error
+        cita = Cita.objects.get(id=self.kwargs.get('pk'), idCliente=self.request.user.id)
+        # if cita.DoesNotExist:
+        # template_name = 'core/index.html'
 
         # cliente = Cliente.objects.get(idUsuario_id=self.request.user)
         context['fecha'] = cita.fecha
@@ -263,7 +267,6 @@ class CitaUpdateView(UpdateView):
 
         print(cita)
         return context
-
 
 
 # desde aqui se puede borrar cita
@@ -301,8 +304,8 @@ class EspecialistaEditaConsulta(UpdateView):
         try:
             context = super(EspecialistaEditaConsulta, self).get_context_data(**kwargs)
             # especialista= Especialista.objects.get(idUsuario=self.model.idEspecialista)
-            #especialista = Especialista.objects.get(idUsuario_id=self.kwargs.get('pk'))
-            cita = Cita.objects.get(id=self.kwargs.get('pk'),idEspecialista_id=self.request.user.id)
+            # especialista = Especialista.objects.get(idUsuario_id=self.kwargs.get('pk'))
+            cita = Cita.objects.get(id=self.kwargs.get('pk'), idEspecialista_id=self.request.user.id)
             context['id'] = cita.id
             context['fecha'] = cita.fecha
             context['idEspecialista'] = cita.idEspecialista_id
@@ -331,7 +334,7 @@ class EspecialistaAplazaConsulta(UpdateView):
         try:
             context = super(EspecialistaAplazaConsulta, self).get_context_data(**kwargs)
 
-            cita = Cita.objects.get(id=self.kwargs.get('pk'),idEspecialista_id=self.request.user.id)
+            cita = Cita.objects.get(id=self.kwargs.get('pk'), idEspecialista_id=self.request.user.id)
             context['id'] = cita.id
             context['fecha'] = cita.fecha
             context['idEspecialista'] = cita.idEspecialista_id
@@ -352,20 +355,20 @@ class EspecialistaConsultaHistoricoClientes(ListView):
     template_name = 'core/especialista_consulta_historico_cliente.html'
 
     # funcion que devuelve las citas que no han sido efectuados por el especialista
-    def get_queryset(self,**kwargs):
+    def get_queryset(self, **kwargs):
         # return Cita.objects.filter(realizada=1).filter(idEspecialista=self.request.user.id)
         try:
-            return Cita.objects.filter(realizada=1).filter(idCliente=self.kwargs.get('pk')).filter(idEspecialista=self.request.user.id).order_by('-fecha')
+            return Cita.objects.filter(realizada=1).filter(idCliente=self.kwargs.get('pk')).filter(
+                idEspecialista=self.request.user.id).order_by('-fecha')
         except ObjectDoesNotExist:
             print("No es una consulta suya")
-
 
     # mediante esta funcion tomamos el valor de la pk, metido en la url, para saber que especialista
     # solicitamos la consulta
     def get_context_data(self, **kwargs):
         context = super(EspecialistaConsultaHistoricoClientes, self).get_context_data(**kwargs)
         cita = Cita.objects.get(id=self.kwargs.get('pk'))
-        especialista=Especialista.objects.get(idUsuario_id=self.request.user)
+        especialista = Especialista.objects.get(idUsuario_id=self.request.user)
         context['id'] = cita.id
         context['fecha'] = cita.fecha
         context['idEspecialista'] = especialista.idUsuario_id
@@ -376,9 +379,6 @@ class EspecialistaConsultaHistoricoClientes(ListView):
         return context
 
 
-
-
-
 # desde aqui el especialista puede listar las citas del especialista en el dia corriente
 @method_decorator(especialista_required, name='dispatch')
 class EspecialistaConsultaCitasDelDia(ListView):
@@ -387,24 +387,25 @@ class EspecialistaConsultaCitasDelDia(ListView):
 
     # funcion que devuelve las citas que no han sido efectuados por el especialista
     def get_queryset(self):
-        return Cita.objects.filter(realizada=0).filter(idEspecialista=self.request.user.id).filter(fecha=dateutil.utils.today())
+        return Cita.objects.filter(realizada=0).filter(idEspecialista=self.request.user.id).filter(
+            fecha=dateutil.utils.today())
 
 
 # vista para listado de mensajes recibidos
 @method_decorator(login_required, name='dispatch')
 class MensajeListView(ListView):
     model = Mensaje
-    #template_name = 'core/mensaje_list.html'
+
+    # template_name = 'core/mensaje_list.html'
 
     def get_queryset(self):
         return Mensaje.objects.filter(idReceptor=self.request.user.id)
-        #return Mensaje.objects.get(leido=1,idReceptor=self.request.user.id).order_by('-fecha')
-        #return Mensaje.objects.filter(leido=0,idReceptor=self.request.user).order_by('-fecha')
+        # return Mensaje.objects.get(leido=1,idReceptor=self.request.user.id).order_by('-fecha')
+        # return Mensaje.objects.filter(leido=0,idReceptor=self.request.user).order_by('-fecha')
         print("el idReceptor loqueado es " + Mensaje.idReceptor)
 
 
-
-#vista para crear mensaje y enviarlo
+# vista para crear mensaje y enviarlo
 @method_decorator(login_required, name='dispatch')
 class MensajeCreateView(CreateView):
     model = Mensaje
@@ -416,11 +417,10 @@ class MensajeCreateView(CreateView):
 
         context['especialistas'] = Especialista.objects.order_by('nombre')
         context['clientes'] = Cliente.objects.order_by('nombre')
-        return  context
+        return context
 
 
-
-#vista para leer los mensajes y ponerlos como leidos
+# vista para leer los mensajes y ponerlos como leidos
 @method_decorator(login_required, name='dispatch')
 class MensajeUpdateView(UpdateView):
     model = Mensaje
@@ -433,63 +433,64 @@ class MensajeUpdateView(UpdateView):
     def get_context_data(self, **kwargs):
         try:
             context = super(MensajeUpdateView, self).get_context_data(**kwargs)
-            mensaje = Mensaje.objects.get(id=self.kwargs.get('pk'),idReceptor=self.request.user)
-            #cliente = Cliente.objects.get(idUsuario_id=self.request.user)
+            mensaje = Mensaje.objects.get(id=self.kwargs.get('pk'), idReceptor=self.request.user)
+            # cliente = Cliente.objects.get(idUsuario_id=self.request.user)
             context['idReceptor'] = mensaje.idReceptor
             context['idEmisor'] = mensaje.idEmisor
             context['fecha'] = mensaje.fecha
             context['asunto'] = mensaje.asunto
             context['texto'] = mensaje.texto
             context['leido'] = mensaje.leido
-            return  context
+            return context
         except ObjectDoesNotExist:
             print("No tiene derecho a ver la información.")
         except:
-          return render('core/404.html')
+            return render('core/404.html')
+
+    # para guardar los datos
 
 
-    #para guardar los datos
-
-
-#vista para borrar mensaje
+# vista para borrar mensaje
 @method_decorator(login_required, name='dispatch')
 class MensajeDeleteView(DeleteView):
     model = Mensaje
     form_class = MensajeUpdateForm
     success_url = reverse_lazy('mensaje_list')
 
-    #para comprobar que el mensaje es tiene como receptor a la persona logeada
+    # para comprobar que el mensaje es tiene como receptor a la persona logeada
     def get_queryset(self):
         try:
-         return Mensaje.objects.filter(idReceptor=self.request.user.id)
+            return Mensaje.objects.filter(idReceptor=self.request.user.id)
         except ObjectDoesNotExist:
             print("ERROR ESE MENSAJE NO ES SUYO NO LO PUEDE BORAR")
 
 
-
 ##VISTAS PARA ERRORES
-#404: página no encontrada
+# 404: página no encontrada
 def render_to_response(param):
     pass
 
 
 def pag_404_not_found(request, exception, template_name="error/404.html"):
     response = render_to_response("core/404.html")
-    response.status_code=404
+    response.status_code = 404
     return response
 
 
-#500: error en el servidor
-def pag_500_error_server(request, exception,template_name="error/500.html"):
+# 500: error en el servidor
+def pag_500_error_server(request, exception, template_name="error/500.html"):
     response = render_to_response("core/500.html")
-    response.status_code=500
+    response.status_code = 500
     return response
 
 
-#vista para general informe de clientes
-@method_decorator(cliente_required,name='dispatch')
+# vista para general informe de clientes
+@method_decorator(cliente_required, name='dispatch')
 class GeneralPdfClientes(View):
 
+    slug=None
+
+    print("LA FECHA INICIO ES " + str(slug))
     def cabecera(self, pdf):
         # Utilizamos el archivo logo_django.png que está guardado en la carpeta media/imagenes
         archivo_imagen = settings.MEDIA_ROOT + '/core/logoyoteayudo.png'
@@ -502,8 +503,7 @@ class GeneralPdfClientes(View):
         pdf.setFont("Helvetica-Bold", 14)
         pdf.drawString(238, 765, u"INFORME DE CLIENTE")
 
-    def cliente(self,pdf):
-
+    def cliente(self, pdf):
         # Establecemos el tamaño de letra en 16 y el tipo de letra Helvetica
         pdf.setFont("Helvetica-Bold", 12)
         # Dibujamos una cadena en la ubicación X,Y especificada
@@ -513,15 +513,13 @@ class GeneralPdfClientes(View):
         pdf.drawString(70, 660, u"Nombre:")
         pdf.drawString(70, 640, u"Apellido:")
         pdf.drawString(70, 620, u"Fecha Nacimiento:")
-        #datos cliente en negrita
+        # datos cliente en negrita
         pdf.setFont("Helvetica-Bold", 12)
-        cliente=Cliente.objects.get(idUsuario=self.request.user.id)
-        pdf.drawString(120,680, cliente.dni)
-        pdf.drawString(120,660, cliente.nombre)
-        pdf.drawString(120,640, cliente.apellido)
-        pdf.drawString(180,620, str(cliente.fechaNacimiento))
-
-
+        cliente = Cliente.objects.get(idUsuario=self.request.user.id)
+        pdf.drawString(120, 680, cliente.dni)
+        pdf.drawString(120, 660, cliente.nombre)
+        pdf.drawString(120, 640, cliente.apellido)
+        pdf.drawString(180, 620, str(cliente.fechaNacimiento))
 
     def get(self, request, *args, **kwargs):
         # Indicamos el tipo de contenido a devolver, en este caso un pdf
@@ -542,13 +540,14 @@ class GeneralPdfClientes(View):
 
     def tabla(self, pdf, y):
         # Creamos una tupla de encabezados para neustra tabla
-        encabezados = ('Fecha', 'Especialista','Informe')
+        encabezados = ('Fecha', 'Especialista', 'Informe')
         # Creamos una lista de tuplas que van a contener a las personas
-        detalles = [(cita.fecha, cita.idEspecialista.nombre +" "+ cita.idEspecialista.apellido , cita.informe) for cita in
-                    Cita.objects.all()]
+        detalles = [(cita.fecha, cita.idEspecialista.nombre + " " + cita.idEspecialista.apellido, cita.informe) for cita
+                   # in Cita.objects.get(fecha__range=['2021-05-23', '2021-05-26'])]
+         in Cita.objects.filter(fecha=self.slug)]
+
         # Establecemos el tamaño de cada una de las columnas de la tabla
         detalle_orden = Table([encabezados] + detalles, colWidths=[2.5 * cm, 4 * cm, 11 * cm])
-
 
         # Aplicamos estilos a las celdas de la tabla
         detalle_orden.setStyle(TableStyle(
@@ -577,11 +576,10 @@ class GeneralPdfClientes(View):
         self.cabecera(pdf)
         # Llamo al método CLiente
         self.cliente(pdf)
-
-
+        # self.fechas()
 
         y = 500
-        self.tabla(pdf, y)
+        self.tabla(pdf, y )
         # Con show page hacemos un corte de página para pasar a la siguiente
         pdf.showPage()
         pdf.save()
@@ -589,3 +587,13 @@ class GeneralPdfClientes(View):
         buffer.close()
         response.write(pdf)
         return response
+
+
+def FiltrarFechasInforme(request):
+    model = Cita
+    form_class = FiltradoConsultaFechas
+    # generadpf.self.tabla
+    # generadpf.self.tabla(fechaInicio,fechaFinal)
+    template_name = 'core/cliente_filtrado_fechas.html'
+    success_url = reverse_lazy('index')
+    return render(request, template_name)

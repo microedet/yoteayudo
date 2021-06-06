@@ -1,35 +1,34 @@
-from django.urls import path,include
+from django.urls import path, include
 from . import views
 from .views import SignUpView, ClienteSignUpView, EspecialistaSignUpView, ClienteUpdate, EspecialistaUpdate, \
     EspecialistaDetailView, EspecialistasListView
 
-
 urlpatterns = [
-    path('', views.index,name = "index"),
-    path('about_us/',views.about_us,name='about_us'),
-    path("blog/",views.blog,name='blog'),
-    path("contact_us/",views.contact_us,name="contact_us"),
-    path("gallery/",views.gallery,name="gallery"),
-    path("services/",views.services,name="services"),
-    path("login/",views.login,name="login"),
+    path('', views.index, name="index"),
+    path('about_us/', views.about_us, name='about_us'),
+    path("blog/", views.blog, name='blog'),
+    path("contact_us/", views.contact_us, name="contact_us"),
+    path("gallery/", views.gallery, name="gallery"),
+    path("services/", views.services, name="services"),
+    path("login/", views.login, name="login"),
 
-    #urls para hacer los registros
+    # urls para hacer los registros
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/signup/', SignUpView.as_view(), name='signup'),
     path('accounts/signup/cliente/', ClienteSignUpView.as_view(), name='cliente_signup'),
     path('accounts/signup/especialista/', EspecialistaSignUpView.as_view(), name='especialista_signup'),
 
-    #urls para hacer update cliente
-    path('updatecliente/',ClienteUpdate.as_view(),name='updatecliente'),
+    # urls para hacer update cliente
+    path('updatecliente/', ClienteUpdate.as_view(), name='updatecliente'),
 
-    #urls para hacer update cliente
-    #path('updateespecialista/<int:pk>',EspecialistaUpdate.as_view(),name='updateespecialista'),
+    # urls para hacer update cliente
+    # path('updateespecialista/<int:pk>',EspecialistaUpdate.as_view(),name='updateespecialista'),
 
-    #url para listview de especialista
-    path('especialistas/',EspecialistasListView.as_view(),name='especialistas'),
+    # url para listview de especialista
+    path('especialistas/', EspecialistasListView.as_view(), name='especialistas'),
 
-    #url para detailview de especialista
-    path('especialista/',views.EspecialistaUpdate.as_view(),name='especialista'),
+    # url para detailview de especialista
+    path('especialista/', views.EspecialistaUpdate.as_view(), name='especialista'),
 
     # url  para update especialista
     path('updateespecialista/<int:pk>', views.EspeUpdateView.as_view(), name='espeupdate'),
@@ -37,28 +36,29 @@ urlpatterns = [
     # url  para delete especialista
     path('deleteespecialista/<int:pk>', views.EspeDelete.as_view(), name='espedelete'),
 
-    #url para solicitar cita
+    # url para solicitar cita
     path('solicitarcita/<int:pk>', views.CitaCreateView.as_view(), name='solicitarcita'),
 
-    #url para listado de citas del cliente
+    # url para listado de citas del cliente
     path('modificar_consultar_cita_cliente/', views.CitasListView.as_view(), name='modificar_consultar_cita_cliente'),
 
-    #url para modificar la fecha de la consulta del especialista
+    # url para modificar la fecha de la consulta del especialista
     path('cambio_fecha_cita_cliente/<int:pk>', views.CitaUpdateView.as_view(), name='cambio_fecha_cita_cliente'),
 
-    #url para borrar la consulta del especialista
+    # url para borrar la consulta del especialista
     path('borrar_cita_cliente/<int:pk>', views.CitaDeleteView.as_view(), name='borrar_cita_cliente'),
 
-    #url para consultar historico de citas
+    # url para consultar historico de citas
     path('historico_consulta_cliente', views.CitasListHistorical.as_view(), name='historico_consulta_cliente'),
 
-    #url para consultar detalles de cita historica
+    # url para consultar detalles de cita historica
     path('consulta_historica/<int:pk>', views.CitaDetailHistorical.as_view(), name='consulta_historica'),
 
-    #url para que el especialista consulte los pacientes
-    path('especialista_consulta_cliente', views.EspecialistaConsultaClientes.as_view(), name='especialista_consulta_cliente'),
+    # url para que el especialista consulte los pacientes
+    path('especialista_consulta_cliente', views.EspecialistaConsultaClientes.as_view(),
+         name='especialista_consulta_cliente'),
 
-    #url para que el especialista vea los detalles de una consulta no realizada y la modifica
+    # url para que el especialista vea los detalles de una consulta no realizada y la modifica
     path('especialista_edita_consulta/<int:pk>', views.EspecialistaEditaConsulta.as_view(),
          name='especialista_edita_consulta'),
 
@@ -74,23 +74,25 @@ urlpatterns = [
     path('especialista_consulta_citas_del_dia/', views.EspecialistaConsultaCitasDelDia.as_view(),
          name='especialista_consulta_citas_del_dia'),
 
-    #url para consultar mensajes recibidos
+    # url para consultar mensajes recibidos
     path('mensaje_list/', views.MensajeListView.as_view(),
          name='mensaje_list'),
 
-    #url para hacer mensajes
-    path('enviar_mensaje/', views.MensajeCreateView.as_view(),name='enviar_mensaje'),
+    # url para hacer mensajes
+    path('enviar_mensaje/', views.MensajeCreateView.as_view(), name='enviar_mensaje'),
 
     path("select2/", include("django_select2.urls")),
 
-    #Url para leer meensaje y porerlo como leido
+    # Url para leer meensaje y porerlo como leido
     path('mensaje_leer/<int:pk>', views.MensajeUpdateView.as_view(), name='mensaje_leer'),
 
     # Url para borrar meensaje
     path('mensaje_borrar/<int:pk>', views.MensajeDeleteView.as_view(), name='mensaje_borrar'),
 
-    #url para generar pdf
-    path('generar_pdf/', views.GeneralPdfClientes.as_view(), name='generar_pdf'),
+    # url para generar pdf
+    path('generar_pdf/<slug:slug>', views.GeneralPdfClientes.as_view(slug='2021-05-25'), name='generar_pdf'),
+
+    # url para crear filtro fechas para informe de consultas
+    path('filtrado_fechas/', views.FiltrarFechasInforme, name='filtrado_fechas'),
 
 ]
-

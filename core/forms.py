@@ -171,3 +171,16 @@ class MensajeUpdateForm(forms.ModelForm):
             'leido': forms.NullBooleanSelect(attrs={'class': 'form-control mt-3', 'placeholder': 'leido'})
 
         }
+
+#formulario para filtrado consultas por fechas
+class FiltradoConsultaFechas(forms.ModelForm):
+    class Meta:
+        fields = ['fechaInicio','fechaFinal']
+
+        widgets = {
+            'fechaInicio': forms.DateInput(attrs={'class': 'form-control mt-3', 'placeholder': 'dd/mm/aaaa'}),
+            'fechaFinal': forms.DateInput(attrs={'class': 'form-control mt-3', 'placeholder': 'dd/mm/aaaa'})
+
+        }
+
+

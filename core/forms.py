@@ -173,14 +173,12 @@ class MensajeUpdateForm(forms.ModelForm):
         }
 
 #formulario para filtrado consultas por fechas
-class FiltradoConsultaFechas(forms.ModelForm):
-    class Meta:
-        fields = ['fechaInicio','fechaFinal']
+class FiltradoConsultaFechas(forms.Form):
 
-        widgets = {
-            'fechaInicio': forms.DateInput(attrs={'class': 'form-control mt-3', 'placeholder': 'dd/mm/aaaa'}),
-            'fechaFinal': forms.DateInput(attrs={'class': 'form-control mt-3', 'placeholder': 'dd/mm/aaaa'})
+    fechaInicio=forms.DateField(label="Fecha Inicial:",required=True,widget=forms.DateInput(attrs={'class':'form-control mt-3','placeholder':'YYYY-MM-DD'}))
+    fechaFinal=forms.DateField(label="Fecha Final:",required=True,widget=forms.DateInput(attrs={'class':'form-control mt-3','placeholder':'YYYY-MM-DD'}))
 
-        }
+
+
 
 

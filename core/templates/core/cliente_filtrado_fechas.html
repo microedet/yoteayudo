@@ -13,17 +13,24 @@
                 <div class="col-md-9 mx-auto mb-5">
                     <br>
                     <br>
-                    <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+                    <form action="" method="POST">{% csrf_token %}
+
                         <h3 class="mb-4">Filtrado Fechas para generar pdf:  </h3>
-
-                        <p>Fecha de inicio:</p>
-                        <input type="date" class="form-control mt-3"   id="fechaInicio" name="fechaInicio" required>
+                        <!--<p>Fecha de inicio :</p>
+                        <input type="date" class="form-control mt-3"   id="fechaInicio" name='' required>
                         <p>Fecha de final:</p>
-                        <input type="date" class="form-control mt-3"  id="fechaFinal" name="fechaFinal" required>
+                        <input type="date" class="form-control mt-3"  id="fechaFinal" name='' required>-->
 
+                        {{ form.as_p }}
+                        {%  if "OK" in request.Get %}
+                        <p><b>Mensaje enviado correctamente</b></p>
+                    {% endif %}
 
-                        <p><a href="{% url 'generar_pdf'  %}" class="btn btn-primary btn-block" >General pdf</a></p>
+                        <p><input type="submit" class="btn btn-primary btn-block" value="General Pdf"></p>
+
                     </form>
+
+
                 </div>
             </div>
         </div>

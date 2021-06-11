@@ -3,12 +3,16 @@ from sqlite3 import Date
 import dateutil.utils
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
-from django.shortcuts import render
-from django.urls import reverse_lazy, Resolver404
+from django.shortcuts import render, redirect
+from django.urls import reverse_lazy, Resolver404, reverse
 from django.views.generic import CreateView, TemplateView, UpdateView, ListView, DetailView, DeleteView
 from reportlab.lib import colors
 from reportlab.lib.units import cm
 from reportlab.platypus import TableStyle, Table
+from requests import Response
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
 
 from core.decorators import especialista_required, cliente_required
 from core.forms import ClienteSignupForm, EspecialistaSignupForm, ClienteUpdateForm, EspecialistaUpdateForm, \
@@ -28,6 +32,8 @@ from django.contrib.admin.views.decorators import staff_member_required
 from io import BytesIO
 from reportlab.pdfgen import canvas
 from django.views.generic import View
+
+from core.serializers import ClienteSerializers, CitaSerializers
 from yoteayudo import settings
 
 
@@ -503,6 +509,14 @@ class GeneralPdfClientes(View):
         pdf.setFont("Helvetica-Bold", 14)
         pdf.drawString(238, 765, u"INFORME DE CLIENTE")
 
+    def fechas(self, fechaInicio):
+        fecha_1 = fechaInicio
+
+
+        print("las fechas son fecha1 " + fecha_1 + " " )
+
+        return fecha_1
+
     def cliente(self, pdf):
         # Establecemos el tamaño de letra en 16 y el tipo de letra Helvetica
         pdf.setFont("Helvetica-Bold", 12)
@@ -539,12 +553,15 @@ class GeneralPdfClientes(View):
         return response
 
     def tabla(self, pdf, y):
+        #print("la fecha es " + fecha)
         # Creamos una tupla de encabezados para neustra tabla
         encabezados = ('Fecha', 'Especialista', 'Informe')
         # Creamos una lista de tuplas que van a contener a las personas
         detalles = [(cita.fecha, cita.idEspecialista.nombre + " " + cita.idEspecialista.apellido, cita.informe) for cita
-                   # in Cita.objects.get(fecha__range=['2021-05-23', '2021-05-26'])]
-         in Cita.objects.filter(fecha=self.slug)]
+                    in Cita.objects.get(fecha__range=['2021-05-23', '2021-05-26'])]
+                    #in Cita.objects.filter(fecha=self.fechas( ))]
+
+        print("estas dentro "+ self.fechas())
 
         # Establecemos el tamaño de cada una de las columnas de la tabla
         detalle_orden = Table([encabezados] + detalles, colWidths=[2.5 * cm, 4 * cm, 11 * cm])
@@ -565,7 +582,10 @@ class GeneralPdfClientes(View):
         # Definimos la coordenada donde se dibujará la tabla
         detalle_orden.drawOn(pdf, 60, y)
 
+
+
     def get(self, request, *args, **kwargs):
+
         # Indicamos el tipo de contenido a devolver, en este caso un pdf
         response = HttpResponse(content_type='application/pdf')
         # La clase io.BytesIO permite tratar un array de bytes como un fichero binario, se utiliza como almacenamiento temporal
@@ -588,12 +608,54 @@ class GeneralPdfClientes(View):
         response.write(pdf)
         return response
 
-
 def FiltrarFechasInforme(request):
-    model = Cita
-    form_class = FiltradoConsultaFechas
-    # generadpf.self.tabla
-    # generadpf.self.tabla(fechaInicio,fechaFinal)
-    template_name = 'core/cliente_filtrado_fechas.html'
-    success_url = reverse_lazy('index')
-    return render(request, template_name)
+    contact_form=FiltradoConsultaFechas
+    #instacia de GenerarPdfCliente
+    generarpdf=GeneralPdfClientes()
+
+
+    if request.method=="POST":
+        contact_form=FiltradoConsultaFechas(data=request.POST)
+        if contact_form.is_valid():
+            fechaInicio=request.POST.get('fechaInicio',' ')
+            fechaFinal=request.POST.get('fechaFinal',' ')
+            #generarpdf.tabla(pdf,500,fechaInicio)
+            #generarpdf.fechas(fechaInicio)
+            print ('la fecha inicio es '+ fechaInicio +' la fecha final es '+ fechaFinal)
+            #return redirect('filtrado_fechas',fechaInicio,fechaFinal)
+            return redirect(reverse('generar_pdf')+"?fechaInicio")
+    return  render(request,'core/cliente_filtrado_fechas.html',{'form':contact_form})
+
+
+
+#Clases para la API REST
+class Cliente_APIView(APIView):
+
+    def get(self, request, format=None, *args, **kwargs):
+        cliente=Cliente.objects.all()
+        serializer = ClienteSerializers(cliente,many=True)
+        return Response(serializer.data)
+
+    def post(self,request,format=None):
+        serializer = ClienteSerializers(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return  Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class Citas_APIView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, format=None, *args, **kwargs):
+        cita = Cita.objects.all()
+        serializer = CitaSerializers(cita, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = CitaSerializers(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

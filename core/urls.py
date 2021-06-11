@@ -90,9 +90,15 @@ urlpatterns = [
     path('mensaje_borrar/<int:pk>', views.MensajeDeleteView.as_view(), name='mensaje_borrar'),
 
     # url para generar pdf
-    path('generar_pdf/<slug:slug>', views.GeneralPdfClientes.as_view(), name='generar_pdf'),
+    path('generar_pdf/<fechaInicio>', views.GeneralPdfClientes.as_view(), name='generar_pdf'),
 
     # url para crear filtro fechas para informe de consultas
     path('filtrado_fechas/', views.FiltrarFechasInforme, name='filtrado_fechas'),
+
+    #url para Api
+    path('cliente/', views.Cliente_APIView.as_view(),name='cliente'),
+
+
+    path('cita/', views.Citas_APIView.as_view(),name='cita')
 
 ]

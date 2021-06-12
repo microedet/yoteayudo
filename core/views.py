@@ -538,10 +538,6 @@ class GeneralPdfClientes(View):
     def get(self, request, *args, **kwargs):
 
 
-        #fechai=self.kwargs.get('fechaInicio')
-
-        #print ("el parametro es " + fechai)
-
         # Indicamos el tipo de contenido a devolver, en este caso un pdf
         response = HttpResponse(content_type='application/pdf')
         # La clase io.BytesIO permite tratar un array de bytes como un fichero binario, se utiliza como almacenamiento temporal
@@ -559,13 +555,12 @@ class GeneralPdfClientes(View):
         return response
 
     def tabla(self,pdf, y):
-        #print("la fecha es " + fecha)
+
         # Creamos una tupla de encabezados para neustra tabla
         encabezados = ('Fecha', 'Especialista', 'Informe')
         # Creamos una lista de tuplas que van a contener a las personas
         detalles = [(cita.fecha, cita.idEspecialista.nombre + " " + cita.idEspecialista.apellido, cita.informe) for cita
-                    #in Cita.objects.get(fecha__range=['2021-05-23', '2021-05-26'])]
-                    in Cita.objects.filter(fecha=self.kwargs.get('fechaInicio' ))]
+                    in Cita.objects.filter(fecha__range=[self.kwargs.get('fechaInicio'), self.kwargs.get('fechaFinal')])]
 
         #print("estas en tabla" + self.fechas(f))
         # Establecemos el tamaño de cada una de las columnas de la tabla
@@ -587,9 +582,6 @@ class GeneralPdfClientes(View):
 
 
     def get(self, request, *args, **kwargs):
-        fechai = self.kwargs.get('fechaInicio')
-
-        print("el parametro2 es " + fechai + "FECHAFINAL"+" ")
 
         # Indicamos el tipo de contenido a devolver, en este caso un pdf
         response = HttpResponse(content_type='application/pdf')
@@ -625,7 +617,7 @@ def FiltrarFechasInforme(request):
             fechaInicio=request.POST.get('fechaInicio',' ')
             fechaFinal=request.POST.get('fechaFinal',' ')
 
-            return redirect(reverse('generar_pdf', kwargs={'fechaInicio':fechaInicio}))
+            return redirect(reverse('generar_pdf', kwargs={'fechaInicio':fechaInicio , 'fechaFinal':fechaFinal}))
     return  render(request,'core/cliente_filtrado_fechas.html',{'form':contact_form})
 
 

@@ -16,12 +16,7 @@
                     <form action="" method="POST">{% csrf_token %}
 
                         <h3 class="mb-4">Filtrado Fechas para generar pdf:  </h3>
-                        <!--<p>Fecha de inicio :</p>
-                        <input type="date" class="form-control mt-3"   id="fechaInicio" name='' required>
-                        <p>Fecha de final:</p>
-                        <input type="date" class="form-control mt-3"  id="fechaFinal" name='' required>-->
-
-                        {{ form.as_p }}
+                         {{ form.as_p }}
                         {%  if "OK" in request.Get %}
                         <p><b>Mensaje enviado correctamente</b></p>
                     {% endif %}

@@ -2,7 +2,7 @@ from sqlite3 import Date
 
 import dateutil.utils
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, Resolver404, reverse
 from django.views.generic import CreateView, TemplateView, UpdateView, ListView, DetailView, DeleteView
@@ -494,9 +494,8 @@ def pag_500_error_server(request, exception, template_name="error/500.html"):
 @method_decorator(cliente_required, name='dispatch')
 class GeneralPdfClientes(View):
 
-    slug=None
 
-    print("LA FECHA INICIO ES " + str(slug))
+
     def cabecera(self, pdf):
         # Utilizamos el archivo logo_django.png que está guardado en la carpeta media/imagenes
         archivo_imagen = settings.MEDIA_ROOT + '/core/logoyoteayudo.png'
@@ -509,13 +508,14 @@ class GeneralPdfClientes(View):
         pdf.setFont("Helvetica-Bold", 14)
         pdf.drawString(238, 765, u"INFORME DE CLIENTE")
 
-    def fechas(self, fechaInicio):
-        fecha_1 = fechaInicio
+    def fechas(self, **kwargs):
 
+        fechai = self.kwargs.get('fechaInicio')
 
-        print("las fechas son fecha1 " + fecha_1 + " " )
+        print ("el parametro1 es " + fechai)
 
-        return fecha_1
+        #print("estas dentro de la funcion " + fecha_1 + " " )
+        return fechai
 
     def cliente(self, pdf):
         # Establecemos el tamaño de letra en 16 y el tipo de letra Helvetica
@@ -536,6 +536,12 @@ class GeneralPdfClientes(View):
         pdf.drawString(180, 620, str(cliente.fechaNacimiento))
 
     def get(self, request, *args, **kwargs):
+
+
+        #fechai=self.kwargs.get('fechaInicio')
+
+        #print ("el parametro es " + fechai)
+
         # Indicamos el tipo de contenido a devolver, en este caso un pdf
         response = HttpResponse(content_type='application/pdf')
         # La clase io.BytesIO permite tratar un array de bytes como un fichero binario, se utiliza como almacenamiento temporal
@@ -552,24 +558,21 @@ class GeneralPdfClientes(View):
         response.write(pdf)
         return response
 
-    def tabla(self, pdf, y):
+    def tabla(self,pdf, y):
         #print("la fecha es " + fecha)
         # Creamos una tupla de encabezados para neustra tabla
         encabezados = ('Fecha', 'Especialista', 'Informe')
         # Creamos una lista de tuplas que van a contener a las personas
         detalles = [(cita.fecha, cita.idEspecialista.nombre + " " + cita.idEspecialista.apellido, cita.informe) for cita
-                    in Cita.objects.get(fecha__range=['2021-05-23', '2021-05-26'])]
-                    #in Cita.objects.filter(fecha=self.fechas( ))]
+                    #in Cita.objects.get(fecha__range=['2021-05-23', '2021-05-26'])]
+                    in Cita.objects.filter(fecha=self.kwargs.get('fechaInicio' ))]
 
-        print("estas dentro "+ self.fechas())
-
+        #print("estas en tabla" + self.fechas(f))
         # Establecemos el tamaño de cada una de las columnas de la tabla
         detalle_orden = Table([encabezados] + detalles, colWidths=[2.5 * cm, 4 * cm, 11 * cm])
-
         # Aplicamos estilos a las celdas de la tabla
         detalle_orden.setStyle(TableStyle(
-            [
-                # La primera fila(encabezados) va a estar centrada
+            [   # La primera fila(encabezados) va a estar centrada
                 ('ALIGN', (0, 0), (3, 0), 'CENTER'),
                 # Los bordes de todas las celdas serán de color negro y con un grosor de 1
                 ('GRID', (0, 0), (-1, -1), 1, colors.black),
@@ -583,8 +586,10 @@ class GeneralPdfClientes(View):
         detalle_orden.drawOn(pdf, 60, y)
 
 
-
     def get(self, request, *args, **kwargs):
+        fechai = self.kwargs.get('fechaInicio')
+
+        print("el parametro2 es " + fechai + "FECHAFINAL"+" ")
 
         # Indicamos el tipo de contenido a devolver, en este caso un pdf
         response = HttpResponse(content_type='application/pdf')
@@ -608,22 +613,19 @@ class GeneralPdfClientes(View):
         response.write(pdf)
         return response
 
+
+
+
+
 def FiltrarFechasInforme(request):
     contact_form=FiltradoConsultaFechas
-    #instacia de GenerarPdfCliente
-    generarpdf=GeneralPdfClientes()
-
-
     if request.method=="POST":
         contact_form=FiltradoConsultaFechas(data=request.POST)
         if contact_form.is_valid():
             fechaInicio=request.POST.get('fechaInicio',' ')
             fechaFinal=request.POST.get('fechaFinal',' ')
-            #generarpdf.tabla(pdf,500,fechaInicio)
-            #generarpdf.fechas(fechaInicio)
-            print ('la fecha inicio es '+ fechaInicio +' la fecha final es '+ fechaFinal)
-            #return redirect('filtrado_fechas',fechaInicio,fechaFinal)
-            return redirect(reverse('generar_pdf')+"?fechaInicio")
+
+            return redirect(reverse('generar_pdf', kwargs={'fechaInicio':fechaInicio}))
     return  render(request,'core/cliente_filtrado_fechas.html',{'form':contact_form})
 
 

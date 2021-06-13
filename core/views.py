@@ -516,6 +516,9 @@ class GeneralPdfClientes(View):
         pdf.drawString(70, 660, u"Nombre:")
         pdf.drawString(70, 640, u"Apellido:")
         pdf.drawString(70, 620, u"Fecha Nacimiento:")
+        pdf.drawString(70, 560, u"Citas entre las fechas:")
+        pdf.drawString(270, 560, u"Al")
+
         # datos cliente en negrita
         pdf.setFont("Helvetica-Bold", 12)
         cliente = Cliente.objects.get(idUsuario=self.request.user.id)
@@ -523,6 +526,8 @@ class GeneralPdfClientes(View):
         pdf.drawString(120, 660, cliente.nombre)
         pdf.drawString(120, 640, cliente.apellido)
         pdf.drawString(180, 620, str(cliente.fechaNacimiento))
+        pdf.drawString(200, 560, str(self.kwargs.get('fechaInicio')))
+        pdf.drawString(290, 560, str(self.kwargs.get('fechaFinal')))
 
     def get(self, request, *args, **kwargs):
         # Indicamos el tipo de contenido a devolver, en este caso un pdf
@@ -547,14 +552,12 @@ class GeneralPdfClientes(View):
         # Creamos una tupla de encabezados para neustra tabla
         encabezados = ('Fecha', 'Especialista', 'Informe')
         # Creamos una lista de tuplas que van a contener a las personas
-        #estilos = getSampleStyleSheet()
+        estilos = getSampleStyleSheet()
         #p = Paragraph(Cita.informe, estilos["Normal"])
 
         detalles = [(cita.fecha, cita.idEspecialista.nombre + " " + cita.idEspecialista.apellido, cita.informe) for cita
                     in Cita.objects.filter(idCliente_id=self.request.user.id,fecha__range=[self.kwargs.get('fechaInicio'), self.kwargs.get('fechaFinal')])]
 
-
-        #para crear parrafos y que no se salga de la tabla
 
         # Establecemos el tamaño de cada una de las columnas de la tabla
         detalle_orden = Table([encabezados] + detalles, colWidths=[2.5 * cm, 4 * cm, 11 * cm])

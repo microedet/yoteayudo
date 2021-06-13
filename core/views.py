@@ -611,13 +611,19 @@ class GeneralPdfClientes(View):
 
 def FiltrarFechasInforme(request):
     contact_form=FiltradoConsultaFechas
+
     if request.method=="POST":
         contact_form=FiltradoConsultaFechas(data=request.POST)
+
+
         if contact_form.is_valid():
             fechaInicio=request.POST.get('fechaInicio',' ')
             fechaFinal=request.POST.get('fechaFinal',' ')
+            if fechaFinal > fechaInicio:
+                return redirect(reverse('generar_pdf', kwargs={'fechaInicio':fechaInicio , 'fechaFinal':fechaFinal}))
+            if fechaFinal < fechaInicio:
+                return redirect(reverse('filtrado_fechas')+"?fechaerronea")
 
-            return redirect(reverse('generar_pdf', kwargs={'fechaInicio':fechaInicio , 'fechaFinal':fechaFinal}))
     return  render(request,'core/cliente_filtrado_fechas.html',{'form':contact_form})
 
 

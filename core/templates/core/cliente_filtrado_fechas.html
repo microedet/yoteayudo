@@ -13,12 +13,17 @@
                 <div class="col-md-9 mx-auto mb-5">
                     <br>
                     <br>
+
+
                     <form action="" method="POST">{% csrf_token %}
 
                         <h3 class="mb-4">Filtrado Fechas para generar pdf:  </h3>
-                         {{ form.as_p }}
-                        {%  if "OK" in request.Get %}
-                        <p><b>Mensaje enviado correctamente</b></p>
+
+                        {{ form.as_p }}
+                         {% if 'fechaerronea' in request.GET %}
+                        <p class="errorlist"><b>
+                            La fecha final es anterior a la inicial
+                        </b></p>
                     {% endif %}
 
                         <p><input type="submit" class="btn btn-primary btn-block" value="General Pdf"></p>

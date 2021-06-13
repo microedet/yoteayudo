@@ -560,7 +560,7 @@ class GeneralPdfClientes(View):
         encabezados = ('Fecha', 'Especialista', 'Informe')
         # Creamos una lista de tuplas que van a contener a las personas
         detalles = [(cita.fecha, cita.idEspecialista.nombre + " " + cita.idEspecialista.apellido, cita.informe) for cita
-                    in Cita.objects.filter(fecha__range=[self.kwargs.get('fechaInicio'), self.kwargs.get('fechaFinal')])]
+                    in Cita.objects.filter(idCliente_id=self.request.user.id,fecha__range=[self.kwargs.get('fechaInicio'), self.kwargs.get('fechaFinal')])]
 
         #print("estas en tabla" + self.fechas(f))
         # Establecemos el tamaño de cada una de las columnas de la tabla
@@ -608,7 +608,7 @@ class GeneralPdfClientes(View):
 
 
 
-
+#metodo para hacer el filtrado por fechas
 def FiltrarFechasInforme(request):
     contact_form=FiltradoConsultaFechas
 

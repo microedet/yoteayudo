@@ -96,9 +96,9 @@ urlpatterns = [
     path('filtrado_fechas/', views.FiltrarFechasInforme, name='filtrado_fechas'),
 
     #url para Api
-    #path('cliente/', views.Cliente_APIView.as_view(),name='cliente'),
+    path('cita/', views.Citas_APIView.as_view(),name='cita'),
 
-
-    path('cita/', views.Citas_APIView.as_view())
+    #urla para tokem
+    path('token/',views.TestView.as_view(),name='token')
 
 ]

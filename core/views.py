@@ -1,4 +1,3 @@
-
 import dateutil.utils
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect
@@ -10,6 +9,9 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import cm
 from reportlab.platypus import TableStyle, Table, Paragraph
 from rest_framework import status
+from rest_framework.authtoken.admin import User
+from rest_framework.authtoken.models import Token
+from rest_framework.exceptions import ParseError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -20,7 +22,7 @@ from core.forms import ClienteSignupForm, EspecialistaSignupForm, ClienteUpdateF
     FiltradoConsultaFechas
 
 from django import forms
-from core.models import Cliente, Especialista, Cita, Mensaje
+from core.models import Cliente, Especialista, Cita, Mensaje, Usuario
 
 # decoradores
 from django.utils.decorators import method_decorator
@@ -33,7 +35,7 @@ from io import BytesIO
 from reportlab.pdfgen import canvas
 from django.views.generic import View
 
-from core.serializers import  CitaSerializers
+from core.serializers import CitaSerializers
 from yoteayudo import settings
 
 
@@ -545,24 +547,23 @@ class GeneralPdfClientes(View):
         response.write(pdf)
         return response
 
-
-    def tabla(self,pdf, y):
-
+    def tabla(self, pdf, y):
         # Creamos una tupla de encabezados para neustra tabla
         encabezados = ('Fecha', 'Especialista', 'Informe')
         # Creamos una lista de tuplas que van a contener a las personas
         estilos = getSampleStyleSheet()
-        #p = Paragraph(Cita.informe, estilos["Normal"])
+        # p = Paragraph(Cita.informe, estilos["Normal"])
 
         detalles = [(cita.fecha, cita.idEspecialista.nombre + " " + cita.idEspecialista.apellido, cita.informe) for cita
-                    in Cita.objects.filter(idCliente_id=self.request.user.id,fecha__range=[self.kwargs.get('fechaInicio'), self.kwargs.get('fechaFinal')])]
-
+                    in Cita.objects.filter(idCliente_id=self.request.user.id,
+                                           fecha__range=[self.kwargs.get('fechaInicio'),
+                                                         self.kwargs.get('fechaFinal')])]
 
         # Establecemos el tamaño de cada una de las columnas de la tabla
         detalle_orden = Table([encabezados] + detalles, colWidths=[2.5 * cm, 4 * cm, 11 * cm])
         # Aplicamos estilos a las celdas de la tabla
         detalle_orden.setStyle(TableStyle(
-            [   # La primera fila(encabezados) va a estar centrada
+            [  # La primera fila(encabezados) va a estar centrada
                 ('ALIGN', (0, 0), (3, 0), 'CENTER'),
                 # Los bordes de todas las celdas serán de color negro y con un grosor de 1
                 ('GRID', (0, 0), (-1, -1), 1, colors.black),
@@ -575,9 +576,7 @@ class GeneralPdfClientes(View):
         # Definimos la coordenada donde se dibujará la tabla
         detalle_orden.drawOn(pdf, 60, y)
 
-
     def get(self, request, *args, **kwargs):
-
         # Indicamos el tipo de contenido a devolver, en este caso un pdf
         response = HttpResponse(content_type='application/pdf')
         # La clase io.BytesIO permite tratar un array de bytes como un fichero binario, se utiliza como almacenamiento temporal
@@ -591,7 +590,7 @@ class GeneralPdfClientes(View):
         # self.fechas()
 
         y = 500
-        self.tabla(pdf, y )
+        self.tabla(pdf, y)
         # Con show page hacemos un corte de página para pasar a la siguiente
         pdf.showPage()
         pdf.save()
@@ -601,25 +600,22 @@ class GeneralPdfClientes(View):
         return response
 
 
-
-
-#metodo para hacer el filtrado por fechas
+# metodo para hacer el filtrado por fechas
 def FiltrarFechasInforme(request):
-    contact_form=FiltradoConsultaFechas
+    contact_form = FiltradoConsultaFechas
 
-    if request.method=="POST":
-        contact_form=FiltradoConsultaFechas(data=request.POST)
-
+    if request.method == "POST":
+        contact_form = FiltradoConsultaFechas(data=request.POST)
 
         if contact_form.is_valid():
-            fechaInicio=request.POST.get('fechaInicio',' ')
-            fechaFinal=request.POST.get('fechaFinal',' ')
+            fechaInicio = request.POST.get('fechaInicio', ' ')
+            fechaFinal = request.POST.get('fechaFinal', ' ')
             if fechaFinal > fechaInicio:
-                return redirect(reverse('generar_pdf', kwargs={'fechaInicio':fechaInicio , 'fechaFinal':fechaFinal}))
+                return redirect(reverse('generar_pdf', kwargs={'fechaInicio': fechaInicio, 'fechaFinal': fechaFinal}))
             if fechaFinal < fechaInicio:
-                return redirect(reverse('filtrado_fechas')+"?fechaerronea")
+                return redirect(reverse('filtrado_fechas') + "?fechaerronea")
 
-    return  render(request,'core/cliente_filtrado_fechas.html',{'form':contact_form})
+    return render(request, 'core/cliente_filtrado_fechas.html', {'form': contact_form})
 
 
 '''
@@ -639,14 +635,12 @@ class Cliente_APIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 '''
 
-class Citas_APIView(APIView):
 
-    #permission_classes = [IsAuthenticated]
+class Citas_APIView(APIView):
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, format=None, *args, **kwargs):
-        cita = Cita.objects.filter(idCliente_id=self.request.user.id,fecha__lt=(dateutil.utils.today()))
-
-
+        cita = Cita.objects.filter(idCliente_id=self.request.user.id, fecha__lt=(dateutil.utils.today()))
 
         serializer = CitaSerializers(cita, many=True)
         return Response(serializer.data)
@@ -657,3 +651,33 @@ class Citas_APIView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # classe para crear los token
+
+
+class TestView(APIView):
+    def get(self, request, format=None):
+        return Response({'detail': "GET Response"})
+
+    def post(self, request, format=None):
+        try:
+            data = request.data
+        except ParseError as error:
+            return Response(
+                'Invalid JSON - {0}'.format(error.detail),
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        if "user" not in data or "password" not in data:
+            return Response(
+                'Wrong credentials',
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+        user = User.objects.get(username=data['user'])
+        if not user:
+            return Response(
+                'No default user, please create one',
+                status=status.HTTP_404_NOT_FOUND
+            )
+        token = Token.objects.get_or_create(user=user)
+        print(user)
+        return Response({'detail': 'Post answer', 'token': token[0].key})

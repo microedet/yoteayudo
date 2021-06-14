@@ -1,4 +1,3 @@
-from sqlite3 import Date
 
 import dateutil.utils
 from django.core.exceptions import ObjectDoesNotExist
@@ -10,9 +9,9 @@ from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import cm
 from reportlab.platypus import TableStyle, Table, Paragraph
-from requests import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from core.decorators import especialista_required, cliente_required
@@ -21,7 +20,7 @@ from core.forms import ClienteSignupForm, EspecialistaSignupForm, ClienteUpdateF
     FiltradoConsultaFechas
 
 from django import forms
-from core.models import Cliente, Especialista, Cita, Mensaje, Usuario
+from core.models import Cliente, Especialista, Cita, Mensaje
 
 # decoradores
 from django.utils.decorators import method_decorator
@@ -34,7 +33,7 @@ from io import BytesIO
 from reportlab.pdfgen import canvas
 from django.views.generic import View
 
-from core.serializers import ClienteSerializers, CitaSerializers
+from core.serializers import  CitaSerializers
 from yoteayudo import settings
 
 
@@ -623,7 +622,7 @@ def FiltrarFechasInforme(request):
     return  render(request,'core/cliente_filtrado_fechas.html',{'form':contact_form})
 
 
-
+'''
 #Clases para la API REST
 class Cliente_APIView(APIView):
 
@@ -638,14 +637,17 @@ class Cliente_APIView(APIView):
             serializer.save()
             return  Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+'''
 
 class Citas_APIView(APIView):
 
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
     def get(self, request, format=None, *args, **kwargs):
-        cita = Cita.objects.all()
+        cita = Cita.objects.filter(idCliente_id=self.request.user.id,fecha__lt=(dateutil.utils.today()))
+
+
+
         serializer = CitaSerializers(cita, many=True)
         return Response(serializer.data)
 
